@@ -1,4 +1,5 @@
 import { onMessage } from 'webext-bridge/background'
+import { getIssue } from '~/api/backlog'
 
 // only on dev mode
 if (import.meta.hot) {
@@ -14,8 +15,5 @@ browser.runtime.onInstalled.addListener((): void => {
 })
 
 onMessage('get-backlog-ticket', async ({ data: { ticketId } }) => {
-  return {
-    ticketUrl: `https://yoriso-cloud.backlog.jp/view/${ticketId}`,
-    ticketTitle: `【${ticketId}】`,
-  }
+  return await getIssue(ticketId)
 })

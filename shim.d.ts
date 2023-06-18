@@ -1,4 +1,5 @@
 import type { ProtocolWithReturn } from 'webext-bridge'
+import { BacklogIssue } from '~/types/backlog'
 
 declare module 'webext-bridge' {
   export interface ProtocolMap {
@@ -6,6 +7,6 @@ declare module 'webext-bridge' {
     // see https://github.com/antfu/webext-bridge#type-safe-protocols
     'tab-prev': { title: string | undefined }
     'get-current-tab': ProtocolWithReturn<{ tabId: number }, { title?: string }>
-    'get-backlog-ticket': ProtocolWithReturn<{ ticketId: string }, { ticketUrl: string, ticketTitle: string } | null>
+    'get-backlog-ticket': ProtocolWithReturn<{ ticketId: string }, BacklogIssue | null>
   }
 }

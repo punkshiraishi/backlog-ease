@@ -1,11 +1,6 @@
 import { sendMessage } from 'webext-bridge/content-script'
 
-let completed = false
-
 const observer = new MutationObserver(async () => {
-  if (completed)
-    return
-
   const elements = document.querySelectorAll('.css-truncate.css-truncate-target')
   const pattern = /YORISO_CLOUD_DEV-(\d+)/
   const matches: string[] = []
@@ -16,18 +11,16 @@ const observer = new MutationObserver(async () => {
       return
 
     const match = textContent.match(pattern)
-    if (match) {
-    // マッチしたものを配列に追加
+    if (match)
       matches.push(match[0])
-    }
   })
 
   if (matches.length === 0)
     return
 
-  const ticketInfo = await sendMessage('get-backlog-ticket', { ticketId: matches[0] })
+  const issue = await sendMessage('get-backlog-ticket', { ticketId: matches[0] })
 
-  if (!ticketInfo)
+  if (!issue)
     return
 
   const titleInput = document.getElementById('pull_request_title')
@@ -35,8 +28,7 @@ const observer = new MutationObserver(async () => {
   if (!(titleInput instanceof HTMLInputElement))
     return
 
-  titleInput.value = ticketInfo.ticketTitle
-  completed = true
+  titleInput.value = `${issue.issueKey} ${issue.summary}`
 
   observer.disconnect()
 })
