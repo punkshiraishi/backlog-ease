@@ -37,7 +37,9 @@ const observer = new MutationObserver(async () => {
   if (!(descriptionInput instanceof HTMLTextAreaElement))
     return
 
-  descriptionInput.value = `# チケット\nhttps://yoriso.backlog.jp/view/${issue.issueKey}`
+  // host 名取得
+  const host = (await browser.storage.local.get('options')).options.backlogHost
+  descriptionInput.value = `# チケット\nhttps://${host}/view/${issue.issueKey}`
 
   // 全て完了したら監視を終了する
   observer.disconnect()
