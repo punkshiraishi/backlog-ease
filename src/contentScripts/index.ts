@@ -30,6 +30,13 @@ const observer = new MutationObserver(async () => {
 
   titleInput.value = `${issue.issueKey} ${issue.summary}`
 
+  const descriptionInput = document.getElementById('pull_request_body')
+
+  if (!(descriptionInput instanceof HTMLTextAreaElement))
+    return
+
+  descriptionInput.value = `# チケット\nhttps://yoriso.backlog.jp/view/${issue.issueKey}`
+
   observer.disconnect()
 })
 
