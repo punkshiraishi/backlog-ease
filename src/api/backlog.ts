@@ -1,12 +1,12 @@
 import type { BacklogIssue } from '~/types/backlog'
 
-function baseUrl(backlogHost: string) {
-  return `https://${backlogHost}/api/v2/issues`
+async function createUrl(path: string) {
+  const { backlogHost, backlogApiKey } = JSON.parse((await browser.storage.local.get('options')).options)
+  return `https://${backlogHost}/api/v2/${path}?apiKey=${backlogApiKey}`
 }
 
-export const getIssue = async (issueIdOrKey: string) => {
-  const { backlogHost, backlogApiKey } = JSON.parse((await browser.storage.local.get('options')).options)
-  const response = await fetch(`${baseUrl(backlogHost)}/${issueIdOrKey}?apiKey=${backlogApiKey}`, {
+async function getRequest<Response>(path: string) {
+  const response = await fetch(await createUrl(path), {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -16,5 +16,9 @@ export const getIssue = async (issueIdOrKey: string) => {
   if (!response.ok)
     throw new Error(`HTTP error! status: ${response.status}`)
 
-  return response.json() as Promise<BacklogIssue>
+  return response.json() as Promise<Response>
+}
+
+export const getIssue = async (issueIdOrKey: string) => {
+  return await getRequest<BacklogIssue>(`issues/${issueIdOrKey}`)
 }
