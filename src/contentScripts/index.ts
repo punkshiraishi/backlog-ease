@@ -23,6 +23,7 @@ const observer = new MutationObserver(async () => {
   if (!issue)
     return
 
+  // プルリクエストタイトルの挿入
   const titleInput = document.getElementById('pull_request_title')
 
   if (!(titleInput instanceof HTMLInputElement))
@@ -30,6 +31,7 @@ const observer = new MutationObserver(async () => {
 
   titleInput.value = `${issue.issueKey} ${issue.summary}`
 
+  // チケット URL の挿入
   const descriptionInput = document.getElementById('pull_request_body')
 
   if (!(descriptionInput instanceof HTMLTextAreaElement))
@@ -37,6 +39,7 @@ const observer = new MutationObserver(async () => {
 
   descriptionInput.value = `# チケット\nhttps://yoriso.backlog.jp/view/${issue.issueKey}`
 
+  // 全て完了したら監視を終了する
   observer.disconnect()
 })
 
