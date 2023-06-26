@@ -4,6 +4,21 @@ import { storage } from '~/logic/storage'
 
 const status: Ref<'valid' | 'invalid' | 'unchecked'> = ref('unchecked')
 
+const backlogHost = computed({
+  get: () => {
+    return storage.value.backlogHost
+  },
+  set: (value: string) => {
+    // URL っぽい場合はホスト名だけ抽出する
+    const pattern = /(https?:\/\/)?([\w.-]+)/
+    const match = value.match(pattern)
+    if (match && match[2])
+      storage.value.backlogHost = match[2]
+    else
+      storage.value.backlogHost = value
+  },
+})
+
 onMounted(async () => {
   await validateConfigs()
 })
@@ -33,7 +48,7 @@ async function validateConfigs() {
           </template>
           <template #content>
             <BaseInput
-              v-model="storage.backlogHost"
+              v-model="backlogHost"
               placeholder="xxx.backlog.jp"
             />
           </template>
