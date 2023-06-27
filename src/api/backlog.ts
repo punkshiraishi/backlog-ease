@@ -1,4 +1,4 @@
-import type { BacklogIssue, BacklogMyself } from '~/types/backlog'
+import type { BacklogIssue, BacklogMyself, BacklogProject } from '~/types/backlog'
 
 async function createUrl(path: string) {
   const { backlogHost, backlogApiKey } = JSON.parse((await browser.storage.local.get('options')).options)
@@ -25,4 +25,8 @@ export const getIssue = async (issueIdOrKey: string) => {
 
 export const getMyself = async () => {
   return await getRequest<BacklogMyself>('users/myself')
+}
+
+export const getProjects = async () => {
+  return await getRequest<BacklogProject[]>('projects')
 }
