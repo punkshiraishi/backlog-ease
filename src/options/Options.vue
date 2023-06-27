@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { debounce } from 'lodash'
-import { getMyself } from '~/api/backlog'
+import { getMyself, getProjects } from '~/api/backlog'
 import { storage } from '~/logic/storage'
 
 const status: Ref<'valid' | 'invalid' | 'unchecked'> = ref('unchecked')
@@ -22,7 +22,6 @@ const backlogHost = computed({
 
 function onCompleted() {
   debounce(() => {
-    // 発火したい処理を書く
     validateConfigs()
   }, 500)()
 }
@@ -35,6 +34,10 @@ async function validateConfigs() {
   try {
     // 有効性確認のために適当なエンドポイントを叩く
     await getMyself()
+
+    // 有効な場合はプロジェクト一覧を取得して storage に保存する
+    storage.value.backlogIdPrefixes = (await getProjects()).map(project => project.projectKey)
+
     status.value = 'valid'
   }
   catch {
@@ -94,14 +97,6 @@ async function validateConfigs() {
           </template>
         </LabeledItem>
         <LabeledItem />
-        <LabeledItem>
-          <template #label>
-            Backlog ID Prefix
-          </template>
-          <template #content>
-            <BaseInput v-model="storage.backlogIdPrefix" />
-          </template>
-        </LabeledItem>
       </div>
     </div>
   </main>

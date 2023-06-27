@@ -5,7 +5,7 @@ export const storageDemo = useStorageLocal('webext-demo', 'Storage Demo')
 export const storage = useStorageLocal('options', {
   backlogHost: '',
   backlogApiKey: '',
-  backlogIdPrefix: '',
+  backlogIdPrefixes: [] as string[],
   enableInputPRTitle: true,
   enableInputPRDescription: true,
 })
