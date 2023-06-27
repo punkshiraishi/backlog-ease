@@ -41,6 +41,7 @@ async function validateConfigs() {
     status.value = 'valid'
   }
   catch {
+    storage.value.backlogIdPrefixes = []
     status.value = 'invalid'
   }
 }
