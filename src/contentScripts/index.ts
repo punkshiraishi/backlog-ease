@@ -1,8 +1,10 @@
 import { sendMessage } from 'webext-bridge/content-script'
+import { storage } from '~/logic/storage'
 
 const observer = new MutationObserver(async () => {
   const elements = document.querySelectorAll('.css-truncate.css-truncate-target')
-  const pattern = /YORISO_CLOUD_DEV-(\d+)/
+  // いずれかの prefix にマッチする文字列を取得
+  const pattern = new RegExp(storage.value.backlogIdPrefixes.map(prefix => `${prefix}-(\\d+)`).join('|'))
   const matches: string[] = []
 
   elements.forEach((element) => {
