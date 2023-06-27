@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { debounce } from 'lodash'
 import { getMyself } from '~/api/backlog'
 import { storage } from '~/logic/storage'
 
@@ -18,6 +19,13 @@ const backlogHost = computed({
       storage.value.backlogHost = value
   },
 })
+
+function onCompleted() {
+  debounce(() => {
+    // 発火したい処理を書く
+    validateConfigs()
+  }, 500)()
+}
 
 onMounted(async () => {
   await validateConfigs()
@@ -50,6 +58,7 @@ async function validateConfigs() {
             <BaseInput
               v-model="backlogHost"
               placeholder="xxx.backlog.jp"
+              @input="onCompleted"
             />
           </template>
         </LabeledItem>
@@ -58,24 +67,15 @@ async function validateConfigs() {
             Backlog API Key
           </template>
           <template #content>
-            <BaseInput v-model="storage.backlogApiKey" />
+            <BaseInput
+              v-model="storage.backlogApiKey"
+              @input="onCompleted"
+            />
           </template>
         </LabeledItem>
         <LabeledItem>
           <template #content>
             <div class="flex flex-col items-start space-y-1">
-              <button
-                class="
-                bg-blue text-white px-2 py-1 rounded
-                  transform active:scale-75 transition-transform
-                "
-                @click="validateConfigs"
-              >
-                <div class="flex flex-row space-x-1 items-center justify-center">
-                  <pixelarticons-check />
-                  <div>有効性のチェック</div>
-                </div>
-              </button>
               <div
                 v-if="status === 'invalid'"
                 class="text-red text-xs flex flex-row space-x-1 items-center justify-center"
