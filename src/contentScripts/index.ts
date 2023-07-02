@@ -1,5 +1,6 @@
 import { sendMessage } from 'webext-bridge/content-script'
 import { storage } from '~/logic/storage'
+import { replaceKeys } from '~/logic/conversion'
 
 const observer = new MutationObserver(async () => {
   const elements = document.querySelectorAll('.css-truncate.css-truncate-target')
@@ -25,23 +26,29 @@ const observer = new MutationObserver(async () => {
   if (!issue)
     return
 
-  // プルリクエストタイトルの挿入
-  const titleInput = document.getElementById('pull_request_title')
+  // issue URL 取得
+  const host = storage.value.backlogHost
+  const url = `https://${host}/view/${issue.issueKey}`
 
-  if (!(titleInput instanceof HTMLInputElement))
-    return
+  // PR タイトルの挿入
+  if (storage.value.enableInputPRTitle === true) {
+    const titleInput = document.getElementById('pull_request_title')
 
-  titleInput.value = `${issue.issueKey} ${issue.summary}`
+    if (!(titleInput instanceof HTMLInputElement))
+      return
 
-  // チケット URL の挿入
-  const descriptionInput = document.getElementById('pull_request_body')
+    titleInput.value = replaceKeys(storage.value.prTitle, issue, url)
+  }
 
-  if (!(descriptionInput instanceof HTMLTextAreaElement))
-    return
+  // PR 本文の挿入
+  if (storage.value.enableInputPRDescription === true) {
+    const descriptionInput = document.getElementById('pull_request_body')
 
-  // host 名取得
-  const host = (await browser.storage.local.get('options')).options.backlogHost
-  descriptionInput.value = `# チケット\nhttps://${host}/view/${issue.issueKey}`
+    if (!(descriptionInput instanceof HTMLTextAreaElement))
+      return
+
+    descriptionInput.value = replaceKeys(storage.value.prDescription, issue, url)
+  }
 
   // 全て完了したら監視を終了する
   observer.disconnect()

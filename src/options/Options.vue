@@ -98,6 +98,36 @@ async function validateConfigs() {
           </template>
         </LabeledItem>
         <LabeledItem />
+        <LabeledItem class="mb-7">
+          <template #label>
+            <div class="flex flex-row justify-between items-center space-x-3">
+              <div>GitHub PR タイトルに Backlog 課題名自動入力</div>
+              <BaseToggle v-model="storage.enableInputPRTitle" />
+            </div>
+          </template>
+          <template #content>
+            <BaseInput
+              v-model="storage.prTitle"
+              :disabled="!storage.enableInputPRTitle"
+              class="border border-gray-400 rounded px-2 py-1 w-full"
+            />
+          </template>
+        </LabeledItem>
+        <LabeledItem>
+          <template #label>
+            <div class="flex flex-row justify-between items-center space-x-3">
+              <div>GitHub PR 本文に Backlog URL 自動入力</div>
+              <BaseToggle v-model="storage.enableInputPRDescription" />
+            </div>
+          </template>
+          <template #content>
+            <BaseTextarea
+              v-model="storage.prDescription"
+              :disabled="!storage.enableInputPRDescription"
+              class="border border-gray-400 rounded px-2 py-1 w-full"
+            />
+          </template>
+        </LabeledItem>
       </div>
     </div>
   </main>
