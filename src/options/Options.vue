@@ -53,7 +53,7 @@ async function validateConfigs() {
       <h1 class="text-xl">
         Settings
       </h1>
-      <div class="flex flex-col">
+      <div class="flex flex-col w-[22rem]">
         <LabeledItem>
           <template #label>
             Backlog Host
@@ -62,6 +62,7 @@ async function validateConfigs() {
             <BaseInput
               v-model="backlogHost"
               placeholder="xxx.backlog.jp"
+              class="w-full"
               @input="onCompleted"
             />
           </template>
@@ -73,6 +74,7 @@ async function validateConfigs() {
           <template #content>
             <BaseInput
               v-model="storage.backlogApiKey"
+              class="w-full"
               @input="onCompleted"
             />
           </template>
@@ -85,14 +87,14 @@ async function validateConfigs() {
                 class="text-red text-xs flex flex-row space-x-1 items-center justify-center"
               >
                 <pixelarticons-close />
-                <div>Backlog Host または Backlog API Key が正しくありません。</div>
+                <div>Backlog Host または Backlog API Key が無効です。</div>
               </div>
               <div
                 v-else-if="status === 'valid'"
                 class="text-green text-xs flex flex-row space-x-1 items-center justify-center"
               >
                 <pixelarticons-check />
-                <div>Backlog Host と Backlog API Key が正しく設定されています。</div>
+                <div>Backlog Host と Backlog API Key が有効です。</div>
               </div>
             </div>
           </template>

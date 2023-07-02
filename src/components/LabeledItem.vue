@@ -1,6 +1,6 @@
 <template>
-  <label class="flex flex-col justify-start items-center">
-    <div class="w-[10rem] text-left p-2">
+  <label class="flex flex-col justify-start items-center w-full">
+    <div class="text-left p-2 w-full">
       <slot name="label">
         &nbsp;
       </slot>
