@@ -84,14 +84,14 @@ async function validateConfigs() {
             <div class="flex flex-col items-start space-y-1">
               <div
                 v-if="status === 'invalid'"
-                class="text-red text-xs flex flex-row space-x-1 items-center justify-center"
+                class="text-danger text-xs flex flex-row space-x-1 items-center justify-center"
               >
                 <pixelarticons-close />
                 <div>Backlog Host または Backlog API Key が無効です。</div>
               </div>
               <div
                 v-else-if="status === 'valid'"
-                class="text-green text-xs flex flex-row space-x-1 items-center justify-center"
+                class="text-primary text-xs flex flex-row space-x-1 items-center justify-center"
               >
                 <pixelarticons-check />
                 <div>Backlog Host と Backlog API Key が有効です。</div>

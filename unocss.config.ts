@@ -10,4 +10,15 @@ export default defineConfig({
   transformers: [
     transformerDirectives(),
   ],
+  theme: {
+    colors: {
+      primary: {
+        DEFAULT: '#42CE9F',
+        darken: '#1D8260',
+      },
+      danger: {
+        DEFAULT: '#CF4D2D',
+      },
+    },
+  },
 })
