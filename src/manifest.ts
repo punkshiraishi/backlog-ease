@@ -33,15 +33,13 @@ export async function getManifest() {
       128: './assets/icon-128.png',
     },
     permissions: [
-      'tabs',
       'storage',
-      'activeTab',
     ],
     host_permissions: ['*://*/*'],
     content_scripts: [
       {
         matches: [
-          '<all_urls>',
+          'https://github.com/*',
         ],
         js: [
           'dist/contentScripts/index.global.js',

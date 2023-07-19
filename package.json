@@ -1,6 +1,6 @@
 {
-  "name": "vitesse-webext",
-  "displayName": "Vitesse WebExt",
+  "name": "backlog-ease",
+  "displayName": "Backlog Ease",
   "version": "0.0.1",
   "private": true,
   "packageManager": "pnpm@8.3.1",
