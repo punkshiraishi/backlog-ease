@@ -1,8 +1,8 @@
 import type { BacklogIssue, BacklogMyself, BacklogProject } from '~/types/backlog'
+import { storage } from '~/logic/storage'
 
 async function createUrl(path: string) {
-  const { backlogHost, backlogApiKey } = JSON.parse((await browser.storage.local.get('options')).options)
-  return `https://${backlogHost}/api/v2/${path}?apiKey=${backlogApiKey}`
+  return `https://${storage.value.backlogHost}/api/v2/${path}?apiKey=${storage.value.backlogApiKey}`
 }
 
 async function getRequest<Response>(path: string) {
