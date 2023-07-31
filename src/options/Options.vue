@@ -20,15 +20,13 @@ const backlogHost = computed({
   },
 })
 
-function onCompleted() {
+watch(
+  () => [storage.value.backlogHost, storage.value.backlogApiKey],
   debounce(() => {
     validateConfigs()
-  }, 500)()
-}
-
-onMounted(async () => {
-  await validateConfigs()
-})
+  }, 500),
+  { immediate: true },
+)
 
 async function validateConfigs() {
   try {
@@ -63,7 +61,6 @@ async function validateConfigs() {
               v-model="backlogHost"
               placeholder="xxx.backlog.jp"
               class="w-full"
-              @input="onCompleted"
             />
           </template>
         </LabeledItem>
@@ -75,7 +72,6 @@ async function validateConfigs() {
             <BaseInput
               v-model="storage.backlogApiKey"
               class="w-full"
-              @input="onCompleted"
             />
           </template>
         </LabeledItem>
