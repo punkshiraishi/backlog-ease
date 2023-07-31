@@ -71,6 +71,7 @@ async function validateConfigs() {
           <template #content>
             <BaseInput
               v-model="storage.backlogApiKey"
+              type="password"
               class="w-full"
             />
           </template>
