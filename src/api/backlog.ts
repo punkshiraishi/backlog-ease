@@ -1,8 +1,10 @@
+import browser from 'webextension-polyfill'
 import type { BacklogIssue, BacklogMyself, BacklogProject } from '~/types/backlog'
-import { storage } from '~/logic/storage'
 
 async function createUrl(path: string) {
-  return `https://${storage.value.backlogHost}/api/v2/${path}?apiKey=${storage.value.backlogApiKey}`
+  const options: any = JSON.parse((await browser.storage.local.get('options')).options)
+
+  return `https://${options.backlogHost}/api/v2/${path}?apiKey=${options.backlogApiKey}`
 }
 
 async function getRequest<Response>(path: string) {
