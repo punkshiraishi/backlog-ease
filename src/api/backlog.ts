@@ -1,14 +1,17 @@
 import browser from 'webextension-polyfill'
 import type { BacklogIssue, BacklogMyself, BacklogProject } from '~/types/backlog'
 
-async function createUrl(path: string) {
+interface Queries { [key: string]: string | number }
+
+async function createUrl(path: string, queries: Queries = {}) {
   const options: any = JSON.parse((await browser.storage.local.get('options')).options)
 
-  return `https://${options.backlogHost}/api/v2/${path}?apiKey=${options.backlogApiKey}`
+  const queryString = Object.entries(queries).map(([key, value]) => `${key}=${value}`).join('&')
+  return `https://${options.backlogHost}/api/v2/${path}?apiKey=${options.backlogApiKey}&${queryString}`
 }
 
-async function getRequest<Response>(path: string) {
-  const response = await fetch(await createUrl(path), {
+async function getRequest<Response>(path: string, queries?: Queries) {
+  const response = await fetch(await createUrl(path, queries), {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -31,4 +34,9 @@ export const getMyself = async () => {
 
 export const getProjects = async () => {
   return await getRequest<BacklogProject[]>('projects')
+}
+
+export const getMyIssues = async () => {
+  const myself = await getMyself()
+  return await getRequest<BacklogIssue[]>('issues', { 'assigneeId[]': myself.id })
 }
