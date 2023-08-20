@@ -1,12 +1,17 @@
 import browser from 'webextension-polyfill'
-import type { BacklogIssue, BacklogMyself, BacklogProject } from '~/types/backlog'
+import type { BacklogIssue, BacklogMyself, BacklogProject, BacklogStatus } from '~/types/backlog'
 
-interface Queries { [key: string]: string | number }
+interface Queries { [key: string]: string | number | string[] | number[]}
 
 async function createUrl(path: string, queries: Queries = {}) {
   const options: any = JSON.parse((await browser.storage.local.get('options')).options)
 
-  const queryString = Object.entries(queries).map(([key, value]) => `${key}=${value}`).join('&')
+  const queryString = Object.entries(queries).map(([key, value]) =>
+    Array.isArray(value)
+      ? value.map(v => `${key}[]=${v}`).join('&')
+      : `${key}=${value}`,
+  ).join('&')
+
   return `https://${options.backlogHost}/api/v2/${path}?apiKey=${options.backlogApiKey}&${queryString}`
 }
 
@@ -36,7 +41,16 @@ export const getProjects = async () => {
   return await getRequest<BacklogProject[]>('projects')
 }
 
+export const getStatuses = async () => {
+  return await getRequest<BacklogStatus[]>('statuses')
+}
+
 export const getMyIssues = async () => {
-  const myself = await getMyself()
-  return await getRequest<BacklogIssue[]>('issues', { 'assigneeId[]': myself.id })
+  const [myself, statuses] = await Promise.all([getMyself(), getStatuses()])
+  return await getRequest<BacklogIssue[]>('issues', {
+    // 自分の課題だけ取得
+    assigneeId: [myself.id],
+    // 完了以外の課題だけ取得
+    statusId: statuses.map(s => s.id).filter(id => id !== 4),
+  })
 }
