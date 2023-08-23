@@ -1,4 +1,7 @@
 {
   "id": 1,
-  "name": "未対応"
+  "projectId": 1,
+  "name": "未対応",
+  "color": "#ed8077",
+  "displayOrder": 1000
 }
