@@ -4,6 +4,7 @@ import type { BacklogIssue } from '~/types/backlog'
 
 const myIssues = ref<BacklogIssue[]>([]) // 変数名をmyIssuesに変更
 const errorMessage = ref('')
+const loading = ref(true)
 
 onMounted(async () => {
   try {
@@ -11,6 +12,9 @@ onMounted(async () => {
   }
   catch (error) {
     errorMessage.value = 'Failed to get projects'
+  }
+  finally {
+    loading.value = false
   }
 })
 
@@ -29,15 +33,19 @@ function openOptionsPage() {
     <h1 font-bold text-left text-sm>
       Your Issues
     </h1>
-    <div class="space-y-1 overflow-auto max-h-[300px]">
+    <div class="space-y-1 overflow-auto max-h-[400px] pb-1">
+      <div v-if="loading">
+        loading...
+      </div>
+      <div v-else-if="myIssues.length === 0">
+        No issues
+      </div>
       <IssueCard
         v-for="issue in myIssues"
+        v-else
         :key="issue.id"
         :issue="issue"
       />
-      <div v-if="myIssues.length === 0">
-        No issues
-      </div>
     </div>
     <div>
       {{ errorMessage }}
