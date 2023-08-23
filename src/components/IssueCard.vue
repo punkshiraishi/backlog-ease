@@ -36,15 +36,15 @@ const onOpenIssue = () => {
       <div flex flex-row space-x-1>
         <div
           :style="{ background: issue.status.color }"
-          class="w-[50px] text-white truncate rounded-full px-1 "
+          class="w-[80px] text-white truncate rounded-full px-1 "
         >
           {{ issue.status.name }}
         </div>
-        <div font-bold>
+        <div>
           {{ issue.issueKey }}
         </div>
       </div>
-      <div text-left truncate w-full>
+      <div text-left truncate w-full font-bold>
         {{ issue.summary }}
       </div>
     </div>
