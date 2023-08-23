@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import browser from 'webextension-polyfill'
 import type { BacklogIssue, BacklogMyself, BacklogProject, BacklogStatus } from '~/types/backlog'
 
@@ -41,16 +42,26 @@ export const getProjects = async () => {
   return await getRequest<BacklogProject[]>('projects')
 }
 
-export const getStatuses = async () => {
-  return await getRequest<BacklogStatus[]>('statuses')
+export const getStatuses = async (projectId: number) => {
+  return await getRequest<BacklogStatus[]>(`projects/${projectId}/statuses`)
 }
 
 export const getMyIssues = async () => {
-  const [myself, statuses] = await Promise.all([getMyself(), getStatuses()])
+  const projects = await getProjects()
+  const [myself, ...statuses] = await Promise.all([
+    getMyself(),
+    ...projects.map(async project => getStatuses(project.id)),
+  ])
+
   return await getRequest<BacklogIssue[]>('issues', {
     // 自分の課題だけ取得
     assigneeId: [myself.id],
-    // 完了以外の課題だけ取得
-    statusId: statuses.map(s => s.id).filter(id => id !== 4),
+    // 重複を排除し完了以外の課題だけ取得
+    statusId: _(statuses)
+      .flatten()
+      .map(s => s.id)
+      .uniq()
+      .filter(id => id !== 4)
+      .value(),
   })
 }
