@@ -20,12 +20,12 @@ const onCopy = () => {
 <template>
   <transition>
     <button
-      class="p-2 rounded-full transition-all"
+      class="p-2 rounded transition-all"
       :class="showCopied ? 'bg-primary text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-500'"
       @click.stop="onCopy"
     >
       <pixelarticons-check v-if="showCopied" />
-      <pixelarticons-copy v-else />
+      <slot v-else />
     </button>
   </transition>
 </template>

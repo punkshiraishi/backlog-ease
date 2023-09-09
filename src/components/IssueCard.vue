@@ -17,10 +17,12 @@ const issueInfoText = computed(() => {
   return `${issue.value.issueKey} ${issue.value.summary}`
 })
 
+const url = computed(() => {
+  return `https://${storage.value.backlogHost}/view/${issue.value.issueKey}`
+})
+
 const onOpenIssue = () => {
-  browser.tabs.create({
-    url: `https://${storage.value.backlogHost}/view/${issue.value.issueKey}`,
-  })
+  browser.tabs.create({ url: url.value })
 }
 </script>
 
@@ -48,6 +50,13 @@ const onOpenIssue = () => {
         {{ issue.summary }}
       </div>
     </div>
-    <CopyButton :text="issueInfoText" />
+    <div class="flex flex-row space-x-1 pr-1">
+      <CopyButton :text="issueInfoText">
+        <pixelarticons-copy />
+      </CopyButton>
+      <CopyButton :text="url">
+        <pixelarticons-link />
+      </CopyButton>
+    </div>
   </div>
 </template>
