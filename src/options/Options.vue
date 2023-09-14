@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import { debounce } from 'lodash'
 import { getMyself, getProjects } from '~/api/backlog'
+import { getGithubPullRequests } from '~/api/github'
 import { storage } from '~/logic/storage'
 
-const status: Ref<'valid' | 'invalid' | 'unchecked'> = ref('unchecked')
+type Status = 'valid' | 'invalid' | 'unchecked'
+
+const backlogStatus: Ref<Status> = ref('unchecked')
+const githubStatus: Ref<Status> = ref('unchecked')
 
 const backlogHost = computed({
   get: () => {
@@ -23,12 +27,12 @@ const backlogHost = computed({
 watch(
   () => [storage.value.backlogHost, storage.value.backlogApiKey],
   debounce(() => {
-    validateConfigs()
+    validateBacklogConfigs()
   }, 500),
   { immediate: true },
 )
 
-async function validateConfigs() {
+async function validateBacklogConfigs() {
   try {
     // 有効性確認のために適当なエンドポイントを叩く
     await getMyself()
@@ -36,11 +40,31 @@ async function validateConfigs() {
     // 有効な場合はプロジェクト一覧を取得して storage に保存する
     storage.value.backlogIdPrefixes = (await getProjects()).map(project => project.projectKey)
 
-    status.value = 'valid'
+    backlogStatus.value = 'valid'
   }
   catch {
     storage.value.backlogIdPrefixes = []
-    status.value = 'invalid'
+    backlogStatus.value = 'invalid'
+  }
+}
+
+watch(
+  () => [storage.value.githubOrg, storage.value.githubToken],
+  debounce(() => {
+    validateGitHubConfigs()
+  }, 500),
+  { immediate: true },
+)
+
+async function validateGitHubConfigs() {
+  try {
+    // 有効性確認のために適当なエンドポイントを叩く
+    await getGithubPullRequests('')
+
+    githubStatus.value = 'valid'
+  }
+  catch {
+    githubStatus.value = 'invalid'
   }
 }
 </script>
@@ -80,18 +104,63 @@ async function validateConfigs() {
           <template #content>
             <div class="flex flex-col items-start space-y-1">
               <div
-                v-if="status === 'invalid'"
+                v-if="backlogStatus === 'invalid'"
                 class="text-danger text-xs flex flex-row space-x-1 items-center justify-center"
               >
                 <pixelarticons-close />
                 <div>Backlog Host または Backlog API Key が無効です。</div>
               </div>
               <div
-                v-else-if="status === 'valid'"
+                v-else-if="backlogStatus === 'valid'"
                 class="text-primary text-xs flex flex-row space-x-1 items-center justify-center"
               >
                 <pixelarticons-check />
                 <div>Backlog Host と Backlog API Key が有効です。</div>
+              </div>
+            </div>
+          </template>
+        </LabeledItem>
+        <LabeledItem />
+        <LabeledItem>
+          <template #label>
+            GitHub Organization
+          </template>
+          <template #content>
+            <BaseInput
+              v-model="storage.githubOrg"
+              placeholder="Enter GitHub Organization"
+              class="w-full"
+            />
+          </template>
+        </LabeledItem>
+        <LabeledItem>
+          <template #label>
+            GitHub Token
+          </template>
+          <template #content>
+            <BaseInput
+              v-model="storage.githubToken"
+              type="password"
+              class="w-full"
+            />
+          </template>
+        </LabeledItem>
+        <LabeledItem>
+          <template #content>
+            <div class="flex flex-col items-start space-y-1">
+              <div
+                v-if="githubStatus === 'invalid'"
+                class="text-danger text-xs flex flex-row space-x-1 items-center justify-center"
+              >
+                <pixelarticons-close />
+                <div>GitHub Organization または GitHub Token が無効です。</div>
+              </div>
+              <div
+                v-else-if="githubStatus === 'valid'"
+                class="text-primary text-xs flex flex-row space-x-1 items-center justify-center"
+              >
+                <pixelarticons-check />
+                <div>GitHub Organization と GitHub Token が有効です。</div>
               </div>
             </div>
           </template>
