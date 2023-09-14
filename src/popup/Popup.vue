@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { getMyIssues } from '~/api/backlog'
 import type { BacklogIssue } from '~/types/backlog'
+import { getGithubPullRequests } from '~/api/github'
 
 const myIssues = ref<BacklogIssue[]>([]) // 変数名をmyIssuesに変更
 const errorMessage = ref('')
@@ -45,6 +46,7 @@ function openOptionsPage() {
         v-else
         :key="issue.id"
         :issue="issue"
+        :get-github-pull-requests="getGithubPullRequests"
       />
     </div>
     <div>
