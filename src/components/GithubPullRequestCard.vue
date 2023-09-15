@@ -2,7 +2,6 @@
 import { defineProps } from 'vue'
 import type { GithubPullRequest } from '~/types/github'
 const props = defineProps({
-
   githubPullRequest: {
     type: Object as PropType<GithubPullRequest>,
     required: true,
@@ -21,9 +20,9 @@ const onOpenGithubPullRequest = () => {
 
 <template>
   <div
-    w-full py-1 px-2 cursor-pointer hover:bg-gray-100 bg-blueGray-100
+    w-full py-1 pl-3 pr-2 cursor-pointer shadow hover:bg-gray-100
     transition duration-100
-    border border-gray-300 border-rounded-xl border-rounded-lt-none
+    border border-gray-200 border-rounded-lb-2xl border-rounded-r
     flex flex-row justify-between items-center
     @click="onOpenGithubPullRequest"
   >

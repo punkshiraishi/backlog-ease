@@ -3,19 +3,10 @@ import type { PropType } from 'vue'
 import { defineProps } from 'vue'
 import { storage } from '~/logic/storage'
 import type { BacklogIssue } from '~/types/backlog'
-import type { GithubPullRequest } from '~/types/github'
 
 const props = defineProps({
   backlogIssue: {
     type: Object as PropType<BacklogIssue>,
-    required: true,
-  },
-  showGithubPullRequestList: {
-    type: Boolean as PropType<boolean>,
-    required: true,
-  },
-  getGithubPullRequests: {
-    type: Function as PropType<(keyword: string) => Promise<GithubPullRequest[]>>,
     required: true,
   },
 })
@@ -69,11 +60,5 @@ const onOpenIssue = () => {
         </CopyButton>
       </div>
     </div>
-    <GithubPullRequestListArea
-      v-if="showGithubPullRequestList"
-      ml-4
-      :issue="backlogIssue"
-      :get-github-pull-requests="getGithubPullRequests"
-    />
   </div>
 </template>
