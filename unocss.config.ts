@@ -20,5 +20,8 @@ export default defineConfig({
         DEFAULT: '#CF4D2D',
       },
     },
+    fontSize: {
+      '2xs': '0.625rem',
+    },
   },
 })

@@ -41,13 +41,18 @@ function openOptionsPage() {
       <div v-else-if="myIssues.length === 0">
         No issues
       </div>
-      <IssueCard
-        v-for="issue in myIssues"
-        v-else
+      <div
+        v-for="issue in myIssues" v-else
         :key="issue.id"
-        :issue="issue"
-        :get-github-pull-requests="getGithubPullRequests"
-      />
+      >
+        <IssueCard
+          :issue="issue"
+        />
+        <GithubPullRequestListArea
+          :issue="issue"
+          :get-github-pull-requests="getGithubPullRequests"
+        />
+      </div>
     </div>
     <div>
       {{ errorMessage }}
