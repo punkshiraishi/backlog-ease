@@ -34,7 +34,7 @@ const pullRequestStatus = computed(() => {
       'text-purple-500': pullRequestStatus === 'merged',
       'text-red-500': pullRequestStatus === 'closed',
     }"
-    class="w-[70px] rounded-full"
+    class="rounded-full text-2xs"
   >
     <div flex flex-row space-x-1 justify-center items-center>
       <pixelarticons-git-pull-request v-if="pullRequestStatus === 'merged'" />

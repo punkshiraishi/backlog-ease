@@ -21,22 +21,26 @@ const onOpenGithubPullRequest = () => {
 
 <template>
   <div
-    w-full p-1 shadow cursor-pointer hover:bg-gray-100
+    w-full py-1 px-2 shadow cursor-pointer hover:bg-gray-100
     transition duration-100
     border border-gray-200 border-rounded
-    flex flex-col items-start
+    flex flex-row justify-between
     @click="onOpenGithubPullRequest"
   >
-    <div flex flex-row items-center space-x-1>
-      <!-- github icon -->
-      <mdi-github />
-      <GithubPullRequestStatusLabel
-        :github-pull-request="githubPullRequest"
-      />
-      <div>{{ repoName }}</div>
+    <div min-w-0 flex flex-col items-start space-y-1 text-2xs>
+      <div flex flex-row items-center space-x-1>
+        <mdi-github text-sm />
+        <GithubPullRequestStatusLabel
+          :github-pull-request="githubPullRequest"
+        />
+        <div>{{ repoName }}</div>
+      </div>
+      <div truncate w-full font-bold>
+        {{ githubPullRequest.title }}
+      </div>
     </div>
-    <div truncate text-2xs font-bold>
-      {{ githubPullRequest.title }}
-    </div>
+    <CopyButton :text="githubPullRequest.html_url">
+      <pixelarticons-link />
+    </CopyButton>
   </div>
 </template>

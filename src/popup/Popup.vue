@@ -34,7 +34,7 @@ function openOptionsPage() {
     <h1 font-bold text-left text-sm>
       Your Issues
     </h1>
-    <div class="space-y-1 overflow-auto max-h-[400px] pb-1">
+    <div class="space-y-3 overflow-auto max-h-[400px] pb-1">
       <div v-if="loading">
         loading...
       </div>

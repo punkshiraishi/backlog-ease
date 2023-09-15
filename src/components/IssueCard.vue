@@ -28,7 +28,7 @@ const onOpenIssue = () => {
 
 <template>
   <div
-    w-full p-1 shadow cursor-pointer hover:bg-gray-100
+    w-full px-2 py-1 shadow cursor-pointer hover:bg-gray-100
     transition duration-100
     border border-gray-200 border-rounded
     flex flex-col space-y-1
@@ -51,7 +51,7 @@ const onOpenIssue = () => {
           {{ issue.summary }}
         </div>
       </div>
-      <div class="flex flex-row space-x-1 pr-1">
+      <div class="flex flex-row space-x-1">
         <CopyButton :text="issueInfoText">
           <pixelarticons-copy />
         </CopyButton>
