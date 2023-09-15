@@ -28,14 +28,17 @@ function openOptionsPage() {
 <template>
   <main
     class="
-      w-[400px] px-4 py-5 text-center text-gray-700
+      w-[400px] pl-3 py-3 text-center text-gray-700
       flex flex-col space-y-2
     "
   >
     <h1 font-bold text-left text-sm>
       Your Issues
     </h1>
-    <div class="space-y-3 overflow-auto max-h-[400px] pb-1">
+    <div
+      class="space-y-3 overflow-auto max-h-[400px] pb-1"
+      style="scrollbar-gutter: stable"
+    >
       <div v-if="loading">
         loading...
       </div>
@@ -43,7 +46,8 @@ function openOptionsPage() {
         No issues
       </div>
       <div
-        v-for="issue in myIssues" v-else
+        v-for="issue in myIssues"
+        v-else
         :key="issue.id"
       >
         <BacklogIssueCard
@@ -60,7 +64,8 @@ function openOptionsPage() {
       {{ errorMessage }}
     </div>
     <button
-      class="cursor-pointer self-end text-gray-500 underline flex items-center space-x-1"
+      pr-3 cursor-pointer self-end text-gray-500 underline
+      flex items-center space-x-1
       @click="openOptionsPage"
     >
       <mdi-settings inline p-auto />
