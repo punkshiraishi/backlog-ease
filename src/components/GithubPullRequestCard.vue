@@ -21,10 +21,10 @@ const onOpenGithubPullRequest = () => {
 
 <template>
   <div
-    w-full py-1 px-2 shadow cursor-pointer hover:bg-gray-100
+    w-full py-1 px-2 cursor-pointer hover:bg-gray-100 bg-blueGray-100
     transition duration-100
-    border border-gray-200 border-rounded
-    flex flex-row justify-between
+    border border-gray-300 border-rounded-xl border-rounded-lt-none
+    flex flex-row justify-between items-center
     @click="onOpenGithubPullRequest"
   >
     <div min-w-0 flex flex-col items-start space-y-1 text-2xs>
@@ -40,7 +40,7 @@ const onOpenGithubPullRequest = () => {
       </div>
     </div>
     <CopyButton :text="githubPullRequest.html_url">
-      <pixelarticons-link />
+      <pixelarticons-link text-2xs />
     </CopyButton>
   </div>
 </template>

@@ -52,7 +52,7 @@ const showGithubPullRequestList = ref(true)
     </div>
     <div
       class="overflow-auto max-h-[400px] pb-1"
-      :class="showGithubPullRequestList ? 'space-y-4' : 'space-y-2'"
+      :class="showGithubPullRequestList ? 'space-y-2' : 'space-y-2'"
       style="scrollbar-gutter: stable"
     >
       <div v-if="loading">
@@ -68,11 +68,7 @@ const showGithubPullRequestList = ref(true)
       >
         <BacklogIssueCard
           :backlog-issue="issue"
-        />
-        <GithubPullRequestListArea
-          v-if="showGithubPullRequestList"
-          ml-8
-          :issue="issue"
+          :show-github-pull-request-list="showGithubPullRequestList"
           :get-github-pull-requests="getGithubPullRequests"
         />
       </div>
