@@ -36,7 +36,7 @@ function openOptionsPage() {
       Your Issues
     </h1>
     <div
-      class="space-y-3 overflow-auto max-h-[400px] pb-1"
+      class="space-y-4 overflow-auto max-h-[400px] pb-1"
       style="scrollbar-gutter: stable"
     >
       <div v-if="loading">
@@ -54,7 +54,7 @@ function openOptionsPage() {
           :backlog-issue="issue"
         />
         <GithubPullRequestListArea
-          ml-6
+          ml-8
           :issue="issue"
           :get-github-pull-requests="getGithubPullRequests"
         />
