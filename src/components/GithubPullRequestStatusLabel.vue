@@ -36,11 +36,11 @@ const pullRequestStatus = computed(() => {
     }"
     class="rounded-full text-2xs"
   >
-    <div flex flex-row space-x-1 justify-center items-center>
-      <pixelarticons-git-pull-request v-if="pullRequestStatus === 'merged'" />
-      <pixelarticons-git-branch v-else-if="pullRequestStatus === 'open'" />
-      <pixelarticons-git-branch v-else-if="pullRequestStatus === 'draft'" />
-      <pixelarticons-git-branch v-else-if="pullRequestStatus === 'closed'" />
+    <div flex flex-row justify-center items-center>
+      <tabler:git-merge v-if="pullRequestStatus === 'merged'" />
+      <tabler:git-pull-request v-else-if="pullRequestStatus === 'open'" />
+      <tabler:git-pull-request-draft v-else-if="pullRequestStatus === 'draft'" />
+      <tabler:git-pull-request-closed v-else-if="pullRequestStatus === 'closed'" />
       <div>{{ pullRequestStatus }}</div>
     </div>
   </div>
