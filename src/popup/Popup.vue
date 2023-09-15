@@ -30,7 +30,7 @@ const showGithubPullRequestList = ref(true)
 <template>
   <main
     class="
-      w-[400px] pl-3 py-3 text-center text-gray-700
+      w-[400px] pl-3 py-3 bg-blueGray-100 text-center text-gray-700
       flex flex-col space-y-2
     "
   >
@@ -51,8 +51,9 @@ const showGithubPullRequestList = ref(true)
       </div>
     </div>
     <div
-      class="overflow-auto max-h-[400px] pb-1"
-      :class="showGithubPullRequestList ? 'space-y-4' : 'space-y-2'"
+      class="overflow-auto scrollbar max-h-[400px] pb-1 pr-1"
+      scrollbar="track-color-transparent thumb-color-gray-400"
+      :class="showGithubPullRequestList ? 'space-y-3' : 'space-y-2'"
       style="scrollbar-gutter: stable"
     >
       <div v-if="loading">

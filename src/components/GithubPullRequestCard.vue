@@ -20,7 +20,7 @@ const onOpenGithubPullRequest = () => {
 
 <template>
   <div
-    w-full py-1 pl-3 pr-2 cursor-pointer shadow hover:bg-gray-100
+    w-full py-1 pl-3 pr-2 cursor-pointer shadow hover:bg-gray-100 bg-white
     transition duration-100
     border border-gray-200 border-rounded-lb-2xl border-rounded-r
     flex flex-row justify-between items-center
