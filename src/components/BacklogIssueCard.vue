@@ -5,20 +5,20 @@ import { storage } from '~/logic/storage'
 import type { BacklogIssue } from '~/types/backlog'
 
 const props = defineProps({
-  issue: {
+  backlogIssue: {
     type: Object as PropType<BacklogIssue>,
     required: true,
   },
 })
 
-const { issue } = toRefs(props)
+const { backlogIssue } = toRefs(props)
 
 const issueInfoText = computed(() => {
-  return `${issue.value.issueKey} ${issue.value.summary}`
+  return `${backlogIssue.value.issueKey} ${backlogIssue.value.summary}`
 })
 
 const url = computed(() => {
-  return `https://${storage.value.backlogHost}/view/${issue.value.issueKey}`
+  return `https://${storage.value.backlogHost}/view/${backlogIssue.value.issueKey}`
 })
 
 const onOpenIssue = () => {
@@ -38,17 +38,17 @@ const onOpenIssue = () => {
       <div min-w-0 flex flex-col items-start space-y-1>
         <div flex flex-row space-x-1>
           <div
-            :style="{ background: issue.status.color }"
+            :style="{ background: backlogIssue.status.color }"
             class="w-[80px] text-white truncate rounded-full px-1 "
           >
-            {{ issue.status.name }}
+            {{ backlogIssue.status.name }}
           </div>
           <div>
-            {{ issue.issueKey }}
+            {{ backlogIssue.issueKey }}
           </div>
         </div>
         <div text-left truncate w-full font-bold>
-          {{ issue.summary }}
+          {{ backlogIssue.summary }}
         </div>
       </div>
       <div class="flex flex-row space-x-1">

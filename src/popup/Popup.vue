@@ -2,6 +2,7 @@
 import { getMyIssues } from '~/api/backlog'
 import type { BacklogIssue } from '~/types/backlog'
 import { getGithubPullRequests } from '~/api/github'
+import BacklogIssueCard from '~/components/BacklogIssueCard.vue'
 
 const myIssues = ref<BacklogIssue[]>([]) // 変数名をmyIssuesに変更
 const errorMessage = ref('')
@@ -45,8 +46,8 @@ function openOptionsPage() {
         v-for="issue in myIssues" v-else
         :key="issue.id"
       >
-        <IssueCard
-          :issue="issue"
+        <BacklogIssueCard
+          :backlog-issue="issue"
         />
         <GithubPullRequestListArea
           :issue="issue"
