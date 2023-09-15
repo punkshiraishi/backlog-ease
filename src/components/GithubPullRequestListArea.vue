@@ -27,7 +27,10 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div space-y-1>
+  <div
+    class="area" space-y-1
+    :class="githubPullRequests.length > 0 && 'fetched'"
+  >
     <GithubPullRequestCard
       v-for="pullRequest in githubPullRequests"
       :key="pullRequest.id"
@@ -37,6 +40,12 @@ onMounted(async () => {
   </div>
 </template>
 
-<style>
-
+<style scoped>
+.area {
+  max-height: 0;
+  transition: max-height .15s ease-in-out;
+}
+.fetched {
+  max-height: 100vh;
+}
 </style>
