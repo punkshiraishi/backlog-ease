@@ -23,6 +23,8 @@ onMounted(async () => {
 function openOptionsPage() {
   browser.runtime.openOptionsPage()
 }
+
+const showGithubPullRequestList = ref(true)
 </script>
 
 <template>
@@ -32,11 +34,25 @@ function openOptionsPage() {
       flex flex-col space-y-2
     "
   >
-    <h1 font-bold text-left text-sm>
-      Your Issues
-    </h1>
+    <div flex flex-row items-center justify-between>
+      <h1 font-bold text-left text-sm>
+        Your Issues
+      </h1>
+      <div mr-3 flex flex-row items-center>
+        <BaseToggle
+          v-model="showGithubPullRequestList"
+          compact
+          :disabled="true"
+          class="text-left"
+        />
+        <div>
+          Show GitHub Pull Requests
+        </div>
+      </div>
+    </div>
     <div
-      class="space-y-4 overflow-auto max-h-[400px] pb-1"
+      class="overflow-auto max-h-[400px] pb-1"
+      :class="showGithubPullRequestList ? 'space-y-4' : 'space-y-2'"
       style="scrollbar-gutter: stable"
     >
       <div v-if="loading">
@@ -54,6 +70,7 @@ function openOptionsPage() {
           :backlog-issue="issue"
         />
         <GithubPullRequestListArea
+          v-if="showGithubPullRequestList"
           ml-8
           :issue="issue"
           :get-github-pull-requests="getGithubPullRequests"
