@@ -50,6 +50,7 @@ function openOptionsPage() {
           :backlog-issue="issue"
         />
         <GithubPullRequestListArea
+          ml-6
           :issue="issue"
           :get-github-pull-requests="getGithubPullRequests"
         />

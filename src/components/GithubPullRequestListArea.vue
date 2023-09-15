@@ -27,7 +27,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div pl-6 space-y-1>
+  <div space-y-1>
     <GithubPullRequestCard
       v-for="pullRequest in githubPullRequests"
       :key="pullRequest.id"
