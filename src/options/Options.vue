@@ -107,14 +107,14 @@ async function validateGitHubConfigs() {
                 v-if="backlogStatus === 'invalid'"
                 class="text-danger text-xs flex flex-row space-x-1 items-center justify-center"
               >
-                <pixelarticons-close />
+                <ic:baseline-close />
                 <div>Backlog Host または Backlog API Key が無効です。</div>
               </div>
               <div
                 v-else-if="backlogStatus === 'valid'"
                 class="text-primary text-xs flex flex-row space-x-1 items-center justify-center"
               >
-                <pixelarticons-check />
+                <ic:baseline-check />
                 <div>Backlog Host と Backlog API Key が有効です。</div>
               </div>
             </div>
@@ -152,14 +152,14 @@ async function validateGitHubConfigs() {
                 v-if="githubStatus === 'invalid'"
                 class="text-danger text-xs flex flex-row space-x-1 items-center justify-center"
               >
-                <pixelarticons-close />
+                <ic:baseline-close />
                 <div>GitHub Organization または GitHub Token が無効です。</div>
               </div>
               <div
                 v-else-if="githubStatus === 'valid'"
                 class="text-primary text-xs flex flex-row space-x-1 items-center justify-center"
               >
-                <pixelarticons-check />
+                <ic:baseline-check />
                 <div>GitHub Organization と GitHub Token が有効です。</div>
               </div>
             </div>

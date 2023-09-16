@@ -53,10 +53,10 @@ const onOpenIssue = () => {
       </div>
       <div class="flex flex-row space-x-1">
         <CopyButton :text="issueInfoText">
-          <pixelarticons-copy />
+          <ic:baseline-content-copy />
         </CopyButton>
         <CopyButton :text="url">
-          <pixelarticons-link />
+          <ic:baseline-link />
         </CopyButton>
       </div>
     </div>

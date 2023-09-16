@@ -39,7 +39,7 @@ const onOpenGithubPullRequest = () => {
       </div>
     </div>
     <CopyButton :text="githubPullRequest.html_url">
-      <pixelarticons-link text-2xs />
+      <ic:baseline-link />
     </CopyButton>
   </div>
 </template>

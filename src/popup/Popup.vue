@@ -87,7 +87,7 @@ const showGithubPullRequestList = ref(true)
       flex items-center space-x-1
       @click="openOptionsPage"
     >
-      <mdi-settings inline p-auto />
+      <ic:baseline-settings inline p-auto />
       <div>
         Settings
       </div>
