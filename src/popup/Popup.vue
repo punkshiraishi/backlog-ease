@@ -65,10 +65,10 @@ async function _getGithubPullRequests(keyword: string) {
       scrollbar="track-color-transparent thumb-color-gray-400"
       style="scrollbar-gutter: stable"
     >
-      <div v-if="loading">
+      <div v-if="loading" p-10>
         loading...
       </div>
-      <div v-else-if="myIssues.length === 0">
+      <div v-else-if="myIssues.length === 0" p-10>
         担当中の課題はありません
       </div>
       <div
