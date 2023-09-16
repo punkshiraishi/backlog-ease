@@ -31,7 +31,7 @@ const showGithubPullRequestList = ref(true)
   <main
     class="
       w-[400px] pl-3 py-3 bg-blueGray-100 text-center text-gray-700
-      flex flex-col space-y-2
+      flex flex-col space-y-1
     "
   >
     <div flex flex-row items-center justify-between>
@@ -87,7 +87,7 @@ const showGithubPullRequestList = ref(true)
       flex items-center space-x-1
       @click="openOptionsPage"
     >
-      <ic:baseline-settings inline p-auto />
+      <ic:baseline-settings />
       <div>
         設定
       </div>
