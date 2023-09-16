@@ -192,6 +192,7 @@ async function validateGitHubConfigs() {
             <BaseTextarea
               v-model="storage.prDescription"
               :disabled="!storage.enableInputPRDescription"
+              rows="5"
               class="border border-gray-400 rounded px-2 py-1 w-full"
             />
           </template>
