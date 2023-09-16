@@ -4,13 +4,13 @@ import type { BacklogIssue } from '~/types/backlog'
 import { getGithubPullRequests } from '~/api/github'
 import BacklogIssueCard from '~/components/BacklogIssueCard.vue'
 
-const myIssues = ref<BacklogIssue[]>([]) // 変数名をmyIssuesに変更
+const myIssues = ref<BacklogIssue[]>([])
 const errorMessage = ref('')
 const loading = ref(true)
 
 onMounted(async () => {
   try {
-    myIssues.value = await getMyIssues() // 変数名をmyIssuesに変更
+    myIssues.value = await getMyIssues()
   }
   catch (error) {
     errorMessage.value = 'Failed to get projects'
