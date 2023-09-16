@@ -25,6 +25,13 @@ function openOptionsPage() {
 }
 
 const showGithubPullRequestList = ref(true)
+const showGithubPullRequestListToggle = ref(false)
+
+async function _getGithubPullRequests(keyword: string) {
+  const res = await getGithubPullRequests(keyword)
+  showGithubPullRequestListToggle.value = true
+  return res
+}
 </script>
 
 <template>
@@ -38,7 +45,10 @@ const showGithubPullRequestList = ref(true)
       <h1 font-bold text-left text-sm>
         担当中の課題
       </h1>
-      <div mr-3 flex flex-row items-center>
+      <div
+        v-if="showGithubPullRequestListToggle"
+        mr-3 flex flex-row items-center
+      >
         <BaseToggle
           v-model="showGithubPullRequestList"
           compact
@@ -51,9 +61,8 @@ const showGithubPullRequestList = ref(true)
       </div>
     </div>
     <div
-      class="overflow-auto scrollbar max-h-[400px] pb-1 pr-1"
+      class="overflow-auto scrollbar max-h-[400px] pb-1 pr-1 space-y-2"
       scrollbar="track-color-transparent thumb-color-gray-400"
-      :class="showGithubPullRequestList ? 'space-y-3' : 'space-y-2'"
       style="scrollbar-gutter: stable"
     >
       <div v-if="loading">
@@ -69,13 +78,12 @@ const showGithubPullRequestList = ref(true)
       >
         <BacklogIssueCard
           :backlog-issue="issue"
-          :get-github-pull-requests="getGithubPullRequests"
         />
         <GithubPullRequestListArea
-          v-if="showGithubPullRequestList"
+          v-show="showGithubPullRequestList"
           ml-6
           :issue="issue"
-          :get-github-pull-requests="getGithubPullRequests"
+          :get-github-pull-requests="_getGithubPullRequests"
         />
       </div>
     </div>
