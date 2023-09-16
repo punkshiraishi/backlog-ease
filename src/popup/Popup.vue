@@ -36,7 +36,7 @@ const showGithubPullRequestList = ref(true)
   >
     <div flex flex-row items-center justify-between>
       <h1 font-bold text-left text-sm>
-        Your Issues
+        担当中の課題
       </h1>
       <div mr-3 flex flex-row items-center>
         <BaseToggle
@@ -46,7 +46,7 @@ const showGithubPullRequestList = ref(true)
           text-left mr-1
         />
         <div>
-          Show GitHub Pull Requests
+          GitHub PR を表示
         </div>
       </div>
     </div>
@@ -60,7 +60,7 @@ const showGithubPullRequestList = ref(true)
         loading...
       </div>
       <div v-else-if="myIssues.length === 0">
-        No issues
+        担当中の課題はありません
       </div>
       <div
         v-for="issue in myIssues"
@@ -89,7 +89,7 @@ const showGithubPullRequestList = ref(true)
     >
       <ic:baseline-settings inline p-auto />
       <div>
-        Settings
+        設定
       </div>
     </button>
   </main>
