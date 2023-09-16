@@ -18,15 +18,12 @@ const _modelValue = useVModel(props, 'modelValue', emit)
 </script>
 
 <template>
-  <label
-    :class="{ 'w-8 h-4': compact, 'w-11 h-6': !compact }"
-    class="relative inline-flex items-center cursor-pointer"
-  >
+  <label class="relative inline-flex items-center cursor-pointer">
     <input v-model="_modelValue" type="checkbox" class="sr-only peer">
     <div
       :class="compact
         ? 'w-7 h-4 after:h-3 after:w-3 after:top-[2px] after:left-[2px]'
-        : 'w-11 h-6 after:h-6 after:w-6 after:top-[2px] after:left-[2px]'
+        : 'w-11 h-6 after:h-5 after:w-5 after:top-[2px] after:left-[2px]'
       "
       class="
         bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 dark:peer-focus:ring-blue-800 rounded-full
