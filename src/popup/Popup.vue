@@ -43,7 +43,7 @@ const showGithubPullRequestList = ref(true)
           v-model="showGithubPullRequestList"
           compact
           :disabled="true"
-          class="text-left"
+          text-left mr-1
         />
         <div>
           Show GitHub Pull Requests
