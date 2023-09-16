@@ -46,18 +46,29 @@ async function _getGithubPullRequests(keyword: string) {
         担当中の課題
       </h1>
       <div
-        v-if="showGithubPullRequestListToggle"
         mr-3 flex flex-row items-center
       >
-        <BaseToggle
-          v-model="showGithubPullRequestList"
-          compact
-          :disabled="true"
-          text-left mr-1
-        />
-        <div>
-          GitHub PR を表示
-        </div>
+        <template v-if="showGithubPullRequestListToggle">
+          <BaseToggle
+            v-model="showGithubPullRequestList"
+            compact
+            :disabled="true"
+            text-left mr-1
+          />
+          <div mr-3>
+            GitHub PR を表示
+          </div>
+        </template>
+        <button
+          cursor-pointer self-end text-gray-500 underline
+          flex items-center space-x-1
+          @click="openOptionsPage"
+        >
+          <ic:baseline-settings />
+          <div>
+            設定
+          </div>
+        </button>
       </div>
     </div>
     <div
@@ -90,15 +101,5 @@ async function _getGithubPullRequests(keyword: string) {
     <div>
       {{ errorMessage }}
     </div>
-    <button
-      pr-3 cursor-pointer self-end text-gray-500 underline
-      flex items-center space-x-1
-      @click="openOptionsPage"
-    >
-      <ic:baseline-settings />
-      <div>
-        設定
-      </div>
-    </button>
   </main>
 </template>
