@@ -32,9 +32,12 @@ const onOpenGithubPullRequest = () => {
         <GithubPullRequestStatusLabel
           :github-pull-request="githubPullRequest"
         />
-        <div>{{ repoName }}</div>
+        <div font-bold>
+          {{ repoName }}
+        </div>
+        <div>#{{ githubPullRequest.number }}</div>
       </div>
-      <div truncate w-full font-bold>
+      <div truncate w-full>
         {{ githubPullRequest.title }}
       </div>
     </div>
