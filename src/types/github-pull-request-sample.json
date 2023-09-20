@@ -29,7 +29,26 @@
     "type": "User",
     "site_admin": false
   },
-  "labels": [],
+  "labels": [
+    {
+      "id": 4989999898,
+      "node_id": "LA_kwDOHQR6xxxxxxxxxxx",
+      "url": "https://api.github.com/repos/testorg/testrepo/labels/test1",
+      "name": "test1",
+      "color": "ff8c00",
+      "default": false,
+      "description": "test label"
+    },
+    {
+      "id": 4989999898,
+      "node_id": "LA_kwDOHQR6xxxxxxxxxxx",
+      "url": "https://api.github.com/repos/testorg/testrepo/labels/test2",
+      "name": "test2",
+      "color": "551696",
+      "default": false,
+      "description": ""
+    }
+  ],
   "state": "open",
   "locked": false,
   "assignee": {
