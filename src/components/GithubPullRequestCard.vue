@@ -26,16 +26,24 @@ const onOpenGithubPullRequest = () => {
     flex flex-row justify-between items-center
     @click="onOpenGithubPullRequest"
   >
-    <div min-w-0 flex flex-col items-start space-y-1 text-2xs>
-      <div flex flex-row items-center space-x-1>
+    <div min-w-0 w-full flex flex-col items-start space-y-1 text-2xs>
+      <div w-full flex flex-row items-center space-x-1>
         <mdi-github text-sm />
         <GithubPullRequestStatusLabel
           :github-pull-request="githubPullRequest"
         />
-        <div font-bold>
+        <div font-bold whitespace-nowrap>
           {{ repoName }}
         </div>
         <div>#{{ githubPullRequest.number }}</div>
+        <div grow relative flex flex-row items-center space-x-1 overflow-hidden>
+          <GithubPullRequestLabel
+            v-for="label in githubPullRequest.labels"
+            :key="label.id"
+            :github-pull-request-label="label"
+          />
+          <div class="absolute inset-y-0 right-0 w-2 bg-gradient-to-r from-transparent to-white" />
+        </div>
       </div>
       <div truncate w-full>
         {{ githubPullRequest.title }}
