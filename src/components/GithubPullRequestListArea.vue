@@ -46,6 +46,6 @@ onMounted(async () => {
   transition: max-height .15s ease-in-out;
 }
 .fetched {
-  max-height: 100%;
+  max-height: 300vh;
 }
 </style>
