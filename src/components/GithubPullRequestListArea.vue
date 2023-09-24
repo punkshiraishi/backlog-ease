@@ -34,7 +34,7 @@ onMounted(async () => {
     <GithubPullRequestCard
       v-for="pullRequest in githubPullRequests"
       :key="pullRequest.id"
-      class="my-1"
+      class="my-1 last:mb-3"
       :github-pull-request="pullRequest"
     />
   </div>
