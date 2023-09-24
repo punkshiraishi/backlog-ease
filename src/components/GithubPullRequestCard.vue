@@ -41,7 +41,7 @@ const repoName = computed(() => {
           <div class="absolute inset-y-0 right-0 w-2 bg-gradient-to-r from-transparent to-white" />
         </div>
       </div>
-      <div truncate w-full>
+      <div truncate w-full text-left>
         {{ githubPullRequest.title }}
       </div>
     </div>
