@@ -12,19 +12,15 @@ const { githubPullRequest } = toRefs(props)
 const repoName = computed(() => {
   return githubPullRequest.value.repository_url.match(/repos\/[^/]+\/([^/]+)$/)?.[1] ?? ''
 })
-
-const onOpenGithubPullRequest = () => {
-  browser.tabs.create({ url: githubPullRequest.value.html_url })
-}
 </script>
 
 <template>
-  <div
+  <a
+    :href="githubPullRequest.html_url" target="_blank"
     w-full py-1 pl-3 pr-2 cursor-pointer shadow hover:bg-gray-100 bg-white
     transition duration-100
     border border-gray-200 border-rounded-lb-2xl border-rounded-r
     flex flex-row justify-between items-center
-    @click="onOpenGithubPullRequest"
   >
     <div min-w-0 w-full flex flex-col items-start space-y-1 text-2xs>
       <div w-full flex flex-row items-center space-x-1>
@@ -52,5 +48,5 @@ const onOpenGithubPullRequest = () => {
     <CopyButton :text="githubPullRequest.html_url">
       <ic:baseline-link />
     </CopyButton>
-  </div>
+  </a>
 </template>

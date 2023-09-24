@@ -20,19 +20,16 @@ const issueInfoText = computed(() => {
 const url = computed(() => {
   return `https://${storage.value.backlogHost}/view/${backlogIssue.value.issueKey}`
 })
-
-const onOpenIssue = () => {
-  browser.tabs.create({ url: url.value })
-}
 </script>
 
 <template>
-  <div
+  <a
     w-full px-2 py-1 shadow cursor-pointer hover:bg-gray-100 bg-white
     transition duration-100
     border border-gray-200 border-rounded
     flex flex-col space-y-1
-    @click="onOpenIssue"
+    :href="url"
+    target="_blank"
   >
     <div flex flex-row justify-between items-center space-x-1>
       <div min-w-0 flex flex-col items-start space-y-1>
@@ -60,5 +57,5 @@ const onOpenIssue = () => {
         </CopyButton>
       </div>
     </div>
-  </div>
+  </a>
 </template>
