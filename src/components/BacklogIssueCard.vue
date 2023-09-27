@@ -9,16 +9,38 @@ const props = defineProps({
     type: Object as PropType<BacklogIssue>,
     required: true,
   },
+  getBacklogIssue: {
+    type: Function as PropType<(id: number) => Promise<BacklogIssue>>,
+    required: true,
+  },
 })
 
 const { backlogIssue } = toRefs(props)
+
+const parentBacklogIssue = ref<BacklogIssue>()
+
+onMounted(async () => {
+  if (backlogIssue.value.parentIssueId)
+    parentBacklogIssue.value = await props.getBacklogIssue(backlogIssue.value.parentIssueId)
+})
+
+const createUrl = (issueKey: string) => {
+  return `https://${storage.value.backlogHost}/view/${issueKey}`
+}
+
+const parentUrl = computed(() => {
+  if (!parentBacklogIssue.value)
+    return ''
+
+  return createUrl(parentBacklogIssue.value.issueKey)
+})
 
 const issueInfoText = computed(() => {
   return `${backlogIssue.value.issueKey} ${backlogIssue.value.summary}`
 })
 
 const url = computed(() => {
-  return `https://${storage.value.backlogHost}/view/${backlogIssue.value.issueKey}`
+  return createUrl(backlogIssue.value.issueKey)
 })
 </script>
 
@@ -40,6 +62,9 @@ const url = computed(() => {
           >
             {{ backlogIssue.status.name }}
           </div>
+          <a v-if="parentUrl" :href="parentUrl" target="_blank" @click.stop>
+            <fluent:window-arrow-up-24-filled hover:text-primary title="aaa" />
+          </a>
           <div>
             {{ backlogIssue.issueKey }}
           </div>

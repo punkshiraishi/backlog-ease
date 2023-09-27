@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getMyIssues } from '~/api/backlog'
+import { getIssue, getMyIssues } from '~/api/backlog'
 import type { BacklogIssue } from '~/types/backlog'
 import { getGithubPullRequests } from '~/api/github'
 import BacklogIssueCard from '~/components/BacklogIssueCard.vue'
@@ -109,6 +109,7 @@ async function _getGithubPullRequests(keyword: string) {
       >
         <BacklogIssueCard
           :backlog-issue="issue"
+          :get-backlog-issue="getIssue"
         />
         <GithubPullRequestListArea
           v-show="showGithubPullRequestList"

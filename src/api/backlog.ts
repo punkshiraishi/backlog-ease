@@ -30,7 +30,7 @@ async function getRequest<Response>(path: string, queries?: Queries) {
   return response.json() as Promise<Response>
 }
 
-export const getIssue = async (issueIdOrKey: string) => {
+export const getIssue = async (issueIdOrKey: number | string) => {
   return await getRequest<BacklogIssue>(`issues/${issueIdOrKey}`)
 }
 
