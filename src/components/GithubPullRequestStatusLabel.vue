@@ -30,7 +30,7 @@ const pullRequestStatus = computed(() => {
   <div
     :class="{
       'text-green-500': pullRequestStatus === 'open',
-      'text-yellow-500': pullRequestStatus === 'draft',
+      'text-gray-400': pullRequestStatus === 'draft',
       'text-purple-500': pullRequestStatus === 'merged',
       'text-red-500': pullRequestStatus === 'closed',
     }"
