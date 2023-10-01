@@ -54,7 +54,7 @@ async function _getGithubPullRequests(keyword: string) {
   <main
     class="
       text-center text-gray-700
-      flex flex-col space-y-1
+      flex flex-col space-y-1 relative
     "
   >
     <div flex flex-row items-center justify-between>
@@ -127,5 +127,8 @@ async function _getGithubPullRequests(keyword: string) {
     <div>
       {{ errorMessage }}
     </div>
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSeNXSKBPpXd8SVLbYSyavpY0dIbvYxRRIdR6p_TPFd59s-qiQ/viewform?usp=sf_link">
+      <ic:baseline-bug-report text-gray-500 text-2xs absolute right-0 />
+    </a>
   </main>
 </template>
