@@ -2,10 +2,10 @@
 import type { PropType } from 'vue'
 import { defineProps } from 'vue'
 import { storage } from '~/logic/storage'
-import type { BacklogIssue } from '~/types/backlog'
+import type { BacklogIssue, BacklogIssueUpdateRequest, BacklogStatus } from '~/types/backlog'
 
 const props = defineProps({
-  backlogIssue: {
+  modelValue: {
     type: Object as PropType<BacklogIssue>,
     required: true,
   },
@@ -13,15 +13,25 @@ const props = defineProps({
     type: Function as PropType<(id: number) => Promise<BacklogIssue>>,
     required: true,
   },
+  updateBacklogIssue: {
+    type: Function as PropType<(issueId: number, data: BacklogIssueUpdateRequest) => Promise<BacklogIssue>>,
+    required: true,
+  },
+  statuses: {
+    type: Array as PropType<BacklogStatus[]>,
+    required: true,
+  },
 })
 
-const { backlogIssue } = toRefs(props)
+const emit = defineEmits(['update:modelValue'])
+
+const { modelValue, updateBacklogIssue, getBacklogIssue } = toRefs(props)
 
 const parentBacklogIssue = ref<BacklogIssue>()
 
 onMounted(async () => {
-  if (backlogIssue.value.parentIssueId)
-    parentBacklogIssue.value = await props.getBacklogIssue(backlogIssue.value.parentIssueId)
+  if (modelValue.value.parentIssueId)
+    parentBacklogIssue.value = await getBacklogIssue.value(modelValue.value.parentIssueId)
 })
 
 const createUrl = (issueKey: string) => {
@@ -36,12 +46,19 @@ const parentUrl = computed(() => {
 })
 
 const issueInfoText = computed(() => {
-  return `${backlogIssue.value.issueKey} ${backlogIssue.value.summary}`
+  return `${modelValue.value.issueKey} ${modelValue.value.summary}`
 })
 
 const url = computed(() => {
-  return createUrl(backlogIssue.value.issueKey)
+  return createUrl(modelValue.value.issueKey)
 })
+
+async function onSelectStatus(status: BacklogStatus) {
+  const updatedIssue = await updateBacklogIssue.value(modelValue.value.id, {
+    statusId: status.id,
+  })
+  emit('update:modelValue', updatedIssue)
+}
 </script>
 
 <template>
@@ -56,21 +73,21 @@ const url = computed(() => {
     <div flex flex-row justify-between items-center space-x-1>
       <div min-w-0 flex flex-col items-start space-y-1>
         <div flex flex-row space-x-1>
-          <div
-            :style="{ background: backlogIssue.status.color }"
-            class="w-[80px] text-white truncate rounded-full px-1 "
-          >
-            {{ backlogIssue.status.name }}
-          </div>
+
+          <BacklogIssueStatusLabelSelector
+            :status="modelValue.status"
+            :statuses="statuses"
+            @select="onSelectStatus"
+          />
           <a v-if="parentUrl" :href="parentUrl" target="_blank" @click.stop>
             <fluent:window-arrow-up-24-filled hover:text-primary title="aaa" />
           </a>
           <div>
-            {{ backlogIssue.issueKey }}
+            {{ modelValue.issueKey }}
           </div>
         </div>
         <div text-left truncate w-full font-bold>
-          {{ backlogIssue.summary }}
+          {{ modelValue.summary }}
         </div>
       </div>
       <div class="flex flex-row space-x-1">

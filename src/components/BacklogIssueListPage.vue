@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { getIssue, getMyIssues } from '~/api/backlog'
-import type { BacklogIssue } from '~/types/backlog'
+import { getIssue, getMyInformation, updateIssue } from '~/api/backlog'
+import type { BacklogIssue, BacklogStatus } from '~/types/backlog'
 import { getGithubPullRequests } from '~/api/github'
 import BacklogIssueCard from '~/components/BacklogIssueCard.vue'
 
@@ -12,12 +12,15 @@ defineProps({
 })
 
 const myIssues = ref<BacklogIssue[]>([])
+const projectStatuses = ref<{ [key: string]: BacklogStatus[] }>({})
 const errorMessage = ref('')
 const loading = ref(true)
 
 onMounted(async () => {
   try {
-    myIssues.value = await getMyIssues()
+    const information = await getMyInformation()
+    myIssues.value = information.issues
+    projectStatuses.value = information.projectStatuses
   }
   catch (error) {
     errorMessage.value = 'Failed to get projects'
@@ -103,13 +106,15 @@ async function _getGithubPullRequests(keyword: string) {
         担当中の課題はありません
       </div>
       <div
-        v-for="issue in myIssues"
+        v-for="(issue, index) in myIssues"
         v-else
         :key="issue.id"
       >
         <BacklogIssueCard
-          :backlog-issue="issue"
+          v-model="myIssues[index]"
           :get-backlog-issue="getIssue"
+          :update-backlog-issue="updateIssue"
+          :statuses="projectStatuses[issue.projectId]"
         />
         <GithubPullRequestListArea
           v-show="showGithubPullRequestList"
