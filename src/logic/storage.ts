@@ -7,6 +7,8 @@ export const storage = useStorageLocal('options', {
   backlogIdPrefixes: [] as string[],
   githubOrg: '',
   githubToken: '',
+  slackToken: '',
+  slackChannel: '',
   enableInputPRTitle: true,
   prTitle: `${conversionKeys.ISSUE_KEY} ${conversionKeys.ISSUE_NAME}`,
   enableInputPRDescription: true,
