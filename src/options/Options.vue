@@ -2,12 +2,13 @@
 import { debounce } from 'lodash'
 import { getMyself, getProjects } from '~/api/backlog'
 import { getGithubPullRequests } from '~/api/github'
+import { getSlackMessages } from '~/api/slack'
+import type { TokenStatus } from '~/components/TokenStatusText'
 import { storage } from '~/logic/storage'
 
-type Status = 'valid' | 'invalid' | 'unchecked'
-
-const backlogStatus: Ref<Status> = ref('unchecked')
-const githubStatus: Ref<Status> = ref('unchecked')
+const backlogStatus: Ref<TokenStatus> = ref('unchecked')
+const githubStatus: Ref<TokenStatus> = ref('unchecked')
+const slackStatus: Ref<TokenStatus> = ref('unchecked')
 
 const backlogHost = computed({
   get: () => {
@@ -67,6 +68,26 @@ async function validateGitHubConfigs() {
     githubStatus.value = 'invalid'
   }
 }
+
+watch(
+  () => [storage.value.slackToken],
+  debounce(() => {
+    validateSlackConfigs()
+  }, 500),
+  { immediate: true },
+)
+
+async function validateSlackConfigs() {
+  try {
+    // 有効性確認のために適当なエンドポイントを叩く
+    await getSlackMessages('')
+
+    slackStatus.value = 'valid'
+  }
+  catch {
+    slackStatus.value = 'invalid'
+  }
+}
 </script>
 
 <template>
@@ -103,20 +124,10 @@ async function validateGitHubConfigs() {
         <LabeledItem>
           <template #content>
             <div class="flex flex-col items-start space-y-1">
-              <div
-                v-if="backlogStatus === 'invalid'"
-                class="text-danger text-xs flex flex-row space-x-1 items-center justify-center"
-              >
-                <ic:baseline-close />
-                <div>Backlog Host または Backlog API Key が無効です。</div>
-              </div>
-              <div
-                v-else-if="backlogStatus === 'valid'"
-                class="text-primary text-xs flex flex-row space-x-1 items-center justify-center"
-              >
-                <ic:baseline-check />
-                <div>Backlog Host と Backlog API Key が有効です。</div>
-              </div>
+              <TokenStatusText
+                :status="backlogStatus"
+                token-name="Backlog Host と Backlog API Key"
+              />
             </div>
           </template>
         </LabeledItem>
@@ -148,20 +159,45 @@ async function validateGitHubConfigs() {
         <LabeledItem>
           <template #content>
             <div class="flex flex-col items-start space-y-1">
-              <div
-                v-if="githubStatus === 'invalid'"
-                class="text-danger text-xs flex flex-row space-x-1 items-center justify-center"
-              >
-                <ic:baseline-close />
-                <div>GitHub Organization または GitHub Token が無効です。</div>
-              </div>
-              <div
-                v-else-if="githubStatus === 'valid'"
-                class="text-primary text-xs flex flex-row space-x-1 items-center justify-center"
-              >
-                <ic:baseline-check />
-                <div>GitHub Organization と GitHub Token が有効です。</div>
-              </div>
+              <TokenStatusText
+                :status="githubStatus"
+                token-name="GitHub Organization と GitHub Token"
+              />
+            </div>
+          </template>
+        </LabeledItem>
+        <LabeledItem />
+        <LabeledItem>
+          <template #label>
+            Slack Channel
+          </template>
+          <template #content>
+            <BaseInput
+              v-model="storage.slackChannel"
+              placeholder="Enter Slack Channel"
+              class="w-full"
+            />
+          </template>
+        </LabeledItem>
+        <LabeledItem>
+          <template #label>
+            Slack Token
+          </template>
+          <template #content>
+            <BaseInput
+              v-model="storage.slackToken"
+              type="password"
+              class="w-full"
+            />
+          </template>
+        </LabeledItem>
+        <LabeledItem>
+          <template #content>
+            <div class="flex flex-col items-start space-y-1">
+              <TokenStatusText
+                :status="slackStatus"
+                token-name="Slack Token"
+              />
             </div>
           </template>
         </LabeledItem>
