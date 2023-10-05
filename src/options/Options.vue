@@ -70,7 +70,7 @@ async function validateGitHubConfigs() {
 }
 
 watch(
-  () => [storage.value.slackToken],
+  () => [storage.value.slackChannel, storage.value.slackToken],
   debounce(() => {
     validateSlackConfigs()
   }, 500),
@@ -196,7 +196,7 @@ async function validateSlackConfigs() {
             <div class="flex flex-col items-start space-y-1">
               <TokenStatusText
                 :status="slackStatus"
-                token-name="Slack Token"
+                token-name="Slack Channel または Slack Token"
               />
             </div>
           </template>

@@ -28,7 +28,7 @@ async function getSlackRequest<Response>(path: string, queries?: Queries) {
   if (!response.ok)
     throw new Error(`HTTP error! status: ${response.status}`)
 
-  return (await (response.json())).messages as Response
+  return (await (response.json())) as Response
 }
 
 export const getSlackMessages = async (query: string) => {
@@ -38,5 +38,10 @@ export const getSlackMessages = async (query: string) => {
     'search.messages',
     { query: options.slackChannel ? `in: ${options.slackChannel}${query}` : query },
   ))
-  return res.matches
+
+  // 200 でもエラーになる場合があるのでチェック
+  if (!res.ok)
+    throw new Error(`Slack API error! error: ${res.error}`)
+
+  return res.messages.matches
 }
