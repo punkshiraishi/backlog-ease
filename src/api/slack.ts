@@ -20,7 +20,6 @@ async function getSlackRequest<Response>(path: string, queries?: Queries) {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      // 'Authorization': `Bearer ${options.slackToken}`,
       'Authorization': `Bearer ${options.slackToken}`,
     },
   })
@@ -36,7 +35,7 @@ export const getSlackMessages = async (query: string) => {
 
   const res = (await getSlackRequest<SlackSearchMessageResponse>(
     'search.messages',
-    { query: options.slackChannel ? `in: ${options.slackChannel}${query}` : query },
+    { query: options.slackChannel ? `in: ${options.slackChannel} ${query}` : query },
   ))
 
   // 200 でもエラーになる場合があるのでチェック
