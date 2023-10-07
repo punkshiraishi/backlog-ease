@@ -3,6 +3,7 @@ import type { PropType } from 'vue'
 import { defineProps } from 'vue'
 import { storage } from '~/logic/storage'
 import type { BacklogIssue, BacklogIssueUpdateRequest, BacklogStatus } from '~/types/backlog'
+import type { SlackMessage } from '~/types/slack'
 
 const props = defineProps({
   modelValue: {
@@ -20,6 +21,10 @@ const props = defineProps({
   statuses: {
     type: Array as PropType<BacklogStatus[]>,
     required: true,
+  },
+  getSlackMessages: {
+    type: Object as PropType<((keyword: string) => Promise<SlackMessage[]>) | null>,
+    default: null,
   },
 })
 
@@ -97,6 +102,11 @@ async function onSelectStatus(status: BacklogStatus) {
         <CopyButton :text="url">
           <ic:baseline-link />
         </CopyButton>
+        <SlackSearchButton
+          v-if="getSlackMessages"
+          :get-slack-messages="getSlackMessages"
+          :text="issueInfoText"
+        />
       </div>
     </div>
   </a>

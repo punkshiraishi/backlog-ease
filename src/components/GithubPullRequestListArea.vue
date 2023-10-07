@@ -2,6 +2,7 @@
 import { defineProps } from 'vue'
 import type { BacklogIssue } from '~/types/backlog'
 import type { GithubPullRequest } from '~/types/github'
+import type { SlackMessage } from '~/types/slack'
 const props = defineProps({
   issue: {
     type: Object as PropType<BacklogIssue>,
@@ -10,6 +11,10 @@ const props = defineProps({
   getGithubPullRequests: {
     type: Function as PropType<(keyword: string) => Promise<GithubPullRequest[]>>,
     required: true,
+  },
+  getSlackMessages: {
+    type: Object as PropType<((keyword: string) => Promise<SlackMessage[]>) | null>,
+    default: null,
   },
 })
 const { issue, getGithubPullRequests } = toRefs(props)
@@ -36,6 +41,7 @@ onMounted(async () => {
       :key="pullRequest.id"
       class="my-1 last:mb-3"
       :github-pull-request="pullRequest"
+      :get-slack-messages="getSlackMessages"
     />
   </div>
 </template>

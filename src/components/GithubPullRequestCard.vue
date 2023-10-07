@@ -1,10 +1,15 @@
 <script lang="ts" setup>
 import { defineProps } from 'vue'
 import type { GithubPullRequest } from '~/types/github'
+import type { SlackMessage } from '~/types/slack'
 const props = defineProps({
   githubPullRequest: {
     type: Object as PropType<GithubPullRequest>,
     required: true,
+  },
+  getSlackMessages: {
+    type: Object as PropType<((keyword: string) => Promise<SlackMessage[]>) | null>,
+    default: null,
   },
 })
 const { githubPullRequest } = toRefs(props)
@@ -45,8 +50,15 @@ const repoName = computed(() => {
         {{ githubPullRequest.title }}
       </div>
     </div>
-    <CopyButton :text="githubPullRequest.html_url">
-      <ic:baseline-link />
-    </CopyButton>
+    <div class="flex flex-row space-x-1">
+      <CopyButton :text="githubPullRequest.html_url">
+        <ic:baseline-link />
+      </CopyButton>
+      <SlackSearchButton
+        v-if="getSlackMessages"
+        :get-slack-messages="getSlackMessages"
+        :text="githubPullRequest.html_url"
+      />
+    </div>
   </a>
 </template>

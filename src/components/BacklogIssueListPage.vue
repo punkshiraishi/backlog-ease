@@ -3,6 +3,7 @@ import { getIssue, getMyInformation, updateIssue } from '~/api/backlog'
 import type { BacklogIssue, BacklogStatus } from '~/types/backlog'
 import { getGithubPullRequests } from '~/api/github'
 import BacklogIssueCard from '~/components/BacklogIssueCard.vue'
+import { getSlackMessages } from '~/api/slack'
 
 defineProps({
   popup: {
@@ -15,12 +16,17 @@ const myIssues = ref<BacklogIssue[]>([])
 const projectStatuses = ref<{ [key: string]: BacklogStatus[] }>({})
 const errorMessage = ref('')
 const loading = ref(true)
+const slackEnabled = ref(false)
 
 onMounted(async () => {
   try {
     const information = await getMyInformation()
     myIssues.value = information.issues
     projectStatuses.value = information.projectStatuses
+
+    // Slack が有効かどうか適当なリクエストで確認
+    await getSlackMessages('a')
+    slackEnabled.value = true
   }
   catch (error) {
     errorMessage.value = 'Failed to get projects'
@@ -95,7 +101,7 @@ async function _getGithubPullRequests(keyword: string) {
       </div>
     </div>
     <div
-      class="overflow-auto scrollbar max-h-[400px] pb-1 pr-1 space-y-2"
+      class="overflow-auto scrollbar pb-1 pr-1 space-y-2"
       scrollbar="track-color-transparent thumb-color-gray-400"
       style="scrollbar-gutter: stable"
     >
@@ -115,12 +121,14 @@ async function _getGithubPullRequests(keyword: string) {
           :get-backlog-issue="getIssue"
           :update-backlog-issue="updateIssue"
           :statuses="projectStatuses[issue.projectId]"
+          :get-slack-messages="slackEnabled ? getSlackMessages : null"
         />
         <GithubPullRequestListArea
           v-show="showGithubPullRequestList"
           ml-6
           :issue="issue"
           :get-github-pull-requests="_getGithubPullRequests"
+          :get-slack-messages="slackEnabled ? getSlackMessages : null"
         />
       </div>
     </div>
