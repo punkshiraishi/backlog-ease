@@ -68,9 +68,10 @@ const convertTsToDateTime = computed(() => {
               {{ convertTsToDateTime }}
             </div>
           </div>
-          <div class="w-full text-left text-white/70 px-1 break-all">
-            {{ convertedText }}
-          </div>
+          <div
+            class="w-full text-left text-white/70 px-1 break-all whitespace-pre-wrap"
+            v-text="convertedText"
+          />
         </div>
       </div>
     </a>
