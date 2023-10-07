@@ -196,7 +196,7 @@ async function validateSlackConfigs() {
             <div class="flex flex-col items-start space-y-1">
               <TokenStatusText
                 :status="slackStatus"
-                token-name="Slack Channel または Slack Token"
+                token-name="Slack Channel と Slack Token"
               />
             </div>
           </template>
