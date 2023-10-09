@@ -99,7 +99,10 @@ async function validateSlackConfigs() {
       <div class="flex flex-col w-[22rem]">
         <LabeledItem>
           <template #label>
-            Backlog Host
+            Backlog Host<InformationIcon ml-1>
+              あなたが利用している Backlog のホスト名を入力してください。<br>
+              課題 URL 等を貼り付けると、自動的に必要な部分を抽出します。
+            </InformationIcon>
           </template>
           <template #content>
             <BaseInput
@@ -111,7 +114,11 @@ async function validateSlackConfigs() {
         </LabeledItem>
         <LabeledItem>
           <template #label>
-            Backlog API Key
+            Backlog API Key<InformationIcon ml-1>
+              <BaseLinkText href="https://yoriso.backlog.com/EditApiSettings.action">
+                Backlog の API 設定ページ
+              </BaseLinkText>から発行できます。
+            </InformationIcon>
           </template>
           <template #content>
             <BaseInput
@@ -146,7 +153,11 @@ async function validateSlackConfigs() {
         </LabeledItem>
         <LabeledItem>
           <template #label>
-            GitHub Token
+            GitHub Token<InformationIcon ml-1>
+              <BaseLinkText href="https://github.com/settings/tokens">
+                GitHub - Personal access tokens (classic)
+              </BaseLinkText>から発行できます。
+            </InformationIcon>
           </template>
           <template #content>
             <BaseInput
@@ -169,19 +180,28 @@ async function validateSlackConfigs() {
         <LabeledItem />
         <LabeledItem>
           <template #label>
-            Slack Channel
+            Slack Channel<InformationIcon ml-1>
+              検索したい Slack の Channel 名を入力してください。<br>
+              カンマ区切りで複数指定できます。
+            </InformationIcon>
           </template>
           <template #content>
             <BaseInput
               v-model="storage.slackChannel"
-              placeholder="Enter Slack Channel"
+              placeholder="general,random, ..."
               class="w-full"
             />
           </template>
         </LabeledItem>
         <LabeledItem>
           <template #label>
-            Slack Token
+            Slack Token<InformationIcon ml-1>
+              Slack のアプリを作成し、OAuth Token を発行して入力してください。
+              <BaseLinkText href="https://qiita.com/kobayashi_ryo/items/a194e620b49edad27364">
+                →参考記事
+              </BaseLinkText><br>
+              scopes には search:read を含めてください。
+            </InformationIcon>
           </template>
           <template #content>
             <BaseInput
