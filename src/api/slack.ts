@@ -30,12 +30,17 @@ async function getSlackRequest<Response>(path: string, queries?: Queries) {
   return (await (response.json())) as Response
 }
 
+// カンマ区切りでチャネルを区切って in:test in:test2 みたいなクエリを作る
+function createInQuery(slackChannel: String) {
+  return slackChannel.split(',').map(channel => `in:${channel}`).join(' ')
+}
+
 export const getSlackMessages = async (query: string) => {
   const options: any = JSON.parse((await browser.storage.local.get('options')).options)
 
   const res = (await getSlackRequest<SlackSearchMessageResponse>(
     'search.messages',
-    { query: options.slackChannel ? `in: ${options.slackChannel} ${query}` : query },
+    { query: options.slackChannel ? `${createInQuery(options.slackChannel)} ${query}` : query },
   ))
 
   // 200 でもエラーになる場合があるのでチェック
