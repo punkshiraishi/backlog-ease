@@ -62,6 +62,9 @@ devDependencies:
   esno:
     specifier: ^0.16.3
     version: 0.16.3
+  floating-vue:
+    specifier: 2.0.0-beta.24
+    version: 2.0.0-beta.24(vue@3.2.47)
   fs-extra:
     specifier: ^11.1.1
     version: 11.1.1
@@ -606,6 +609,22 @@ packages:
       jszip: 3.10.1
       logdown: 3.3.1
       progress: 2.0.3
+    dev: true
+
+  /@floating-ui/core@1.5.0:
+    resolution: {integrity: sha512-kK1h4m36DQ0UHGj5Ah4db7R0rHemTqqO0QLvUqi1/mUUp3LuAWbWxdxSIf/XsnH9VS6rRVPLJCncjRzUvyCLXg==}
+    dependencies:
+      '@floating-ui/utils': 0.1.6
+    dev: true
+
+  /@floating-ui/dom@1.1.1:
+    resolution: {integrity: sha512-TpIO93+DIujg3g7SykEAGZMDtbJRrmnYRCNYSjJlvIbGhBjRSNTLVbNeDQBrzy9qDgUbiWdc7KA0uZHZ2tJmiw==}
+    dependencies:
+      '@floating-ui/core': 1.5.0
+    dev: true
+
+  /@floating-ui/utils@0.1.6:
+    resolution: {integrity: sha512-OfX7E2oUDYxtBvsuS4e/jSn4Q9Qb6DzgeYtsAdkPZ47znpoNsMgZw0+tVijiv3uGNR6dgNlty6r9rzIzHjtd/A==}
     dev: true
 
   /@fluent/syntax@0.19.0:
@@ -3400,6 +3419,20 @@ packages:
 
   /flatted@3.2.7:
     resolution: {integrity: sha512-5nqDSxl8nn5BSNxyR3n4I6eDmbolI6WT+QqR547RwxQapgjQBmtktdP+HTBb/a/zLsbzERTONyUB5pefh5TtjQ==}
+    dev: true
+
+  /floating-vue@2.0.0-beta.24(vue@3.2.47):
+    resolution: {integrity: sha512-URSzP6YXaF4u1oZ9XGL8Sn8puuM7ivp5jkOUrpy5Q1mfo9BfGppJOn+ierTmsSUfJEeHBae8KT7r5DeI3vQIEw==}
+    peerDependencies:
+      '@nuxt/kit': ^3.2.0
+      vue: ^3.2.0
+    peerDependenciesMeta:
+      '@nuxt/kit':
+        optional: true
+    dependencies:
+      '@floating-ui/dom': 1.1.1
+      vue: 3.2.47
+      vue-resize: 2.0.0-alpha.1(vue@3.2.47)
     dev: true
 
   /for-each@0.3.3:
@@ -7032,6 +7065,14 @@ packages:
       semver: 7.5.0
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /vue-resize@2.0.0-alpha.1(vue@3.2.47):
+    resolution: {integrity: sha512-7+iqOueLU7uc9NrMfrzbG8hwMqchfVfSzpVlCMeJQe4pyibqyoifDNbKTZvwxZKDvGkB+PdFeKvnGZMoEb8esg==}
+    peerDependencies:
+      vue: ^3.0.0
+    dependencies:
+      vue: 3.2.47
     dev: true
 
   /vue@3.2.47:
