@@ -1,10 +1,23 @@
 import { conversionKeys } from './conversion'
 import { useStorageLocal } from '~/composables/useStorageLocal'
+export interface Storage {
+  backlogHost: string
+  backlogApiKey: string
+  backlogIdPrefixes: string[]
+  githubOrg: string
+  githubToken: string
+  slackToken: string
+  slackChannel: string
+  enableInputPRTitle: boolean
+  prTitle: string
+  enableInputPRDescription: boolean
+  prDescription: string
+}
 
-export const storage = useStorageLocal('options', {
+export const storage = useStorageLocal<Storage>('options', {
   backlogHost: '',
   backlogApiKey: '',
-  backlogIdPrefixes: [] as string[],
+  backlogIdPrefixes: [],
   githubOrg: '',
   githubToken: '',
   slackToken: '',
