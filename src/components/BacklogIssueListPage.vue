@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { getIssue, getMyInformation, updateIssue } from '~/api/backlog'
-import type { BacklogIssue, BacklogStatus } from '~/types/backlog'
 import { getGithubPullRequests } from '~/api/github'
 import BacklogIssueCard from '~/components/BacklogIssueCard.vue'
 import { getSlackMessages } from '~/api/slack'
+import { cacheStorage } from '~/logic'
 
 defineProps({
   popup: {
@@ -12,21 +12,28 @@ defineProps({
   },
 })
 
-const myIssues = ref<BacklogIssue[]>([])
-const projectStatuses = ref<{ [key: string]: BacklogStatus[] }>({})
 const errorMessage = ref('')
-const loading = ref(true)
 const slackEnabled = ref(false)
+const loading = ref(false)
 
 onMounted(async () => {
+  await fetchInformation()
+
+  // Slack が有効かどうか適当なリクエストで確認
+  await getSlackMessages('a')
+  slackEnabled.value = true
+})
+
+async function onReload() {
+  await fetchInformation()
+}
+
+async function fetchInformation() {
+  loading.value = true
   try {
     const information = await getMyInformation()
-    myIssues.value = information.issues
-    projectStatuses.value = information.projectStatuses
-
-    // Slack が有効かどうか適当なリクエストで確認
-    await getSlackMessages('a')
-    slackEnabled.value = true
+    cacheStorage.value.backlogIssues = information.issues
+    cacheStorage.value.backlogStatuses = information.projectStatuses
   }
   catch (error) {
     errorMessage.value = 'Failed to get projects'
@@ -34,7 +41,7 @@ onMounted(async () => {
   finally {
     loading.value = false
   }
-})
+}
 
 function openDashboardPage() {
   browser.tabs.create({
@@ -68,15 +75,20 @@ async function _getGithubPullRequests(keyword: string) {
         担当中の課題
         <button
           v-if="popup"
+          v-tooltip="'新しいタブで開く'"
           cursor-pointer self-end text-gray-500 mb-0.5 ml-1
           @click="openDashboardPage"
         >
           <ic:round-open-in-new />
         </button>
+        <button
+          cursor-pointer self-end text-gray-500 mb-0.5 ml-1
+          @click="onReload"
+        >
+          <ic:baseline-refresh text-base :class="loading && 'animate-spin'" />
+        </button>
       </h1>
-      <div
-        mr-3 flex flex-row items-center
-      >
+      <div mr-3 flex flex-row items-center>
         <template v-if="showGithubPullRequestListToggle">
           <BaseToggle
             v-model="showGithubPullRequestList"
@@ -105,30 +117,28 @@ async function _getGithubPullRequests(keyword: string) {
       scrollbar="track-color-transparent thumb-color-gray-400"
       style="scrollbar-gutter: stable"
     >
-      <div v-if="loading" p-10>
-        loading...
-      </div>
-      <div v-else-if="myIssues.length === 0" p-10>
+      <div v-if="(cacheStorage.backlogIssues || []).length === 0" p-10>
         担当中の課題はありません
       </div>
       <div
-        v-for="(issue, index) in myIssues"
+        v-for="(issue, index) in cacheStorage.backlogIssues"
         v-else
         :key="issue.id"
       >
         <BacklogIssueCard
-          v-model="myIssues[index]"
+          v-model="cacheStorage.backlogIssues[index]"
           :get-backlog-issue="getIssue"
           :update-backlog-issue="updateIssue"
-          :statuses="projectStatuses[issue.projectId]"
+          :statuses="cacheStorage.backlogStatuses[issue.projectId]"
           :get-slack-messages="slackEnabled ? getSlackMessages : null"
         />
         <GithubPullRequestListArea
           v-show="showGithubPullRequestList"
-          ml-6
           :issue="issue"
+          :default-github-pull-requests="cacheStorage.githubPullRequests[issue.id] || []"
           :get-github-pull-requests="_getGithubPullRequests"
           :get-slack-messages="slackEnabled ? getSlackMessages : null"
+          ml-6
         />
       </div>
     </div>

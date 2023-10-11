@@ -34,6 +34,7 @@ export async function getManifest() {
     },
     permissions: [
       'storage',
+      'alarms',
     ],
     host_permissions: ['*://*/*'],
     content_scripts: [

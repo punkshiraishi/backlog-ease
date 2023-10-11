@@ -85,7 +85,10 @@ async function onSelectStatus(status: BacklogStatus) {
             @select="onSelectStatus"
           />
           <a v-if="parentUrl" :href="parentUrl" target="_blank" @click.stop>
-            <fluent:window-arrow-up-24-filled hover:text-primary title="aaa" />
+            <carbon:parent-child
+              v-tooltip="'親課題を開く'"
+              hover:text-primary
+            />
           </a>
           <div>
             {{ modelValue.issueKey }}
