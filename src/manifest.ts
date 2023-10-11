@@ -56,7 +56,7 @@ export async function getManifest() {
       extension_pages: [
         `script-src \'self\'${isDev ? ` http://localhost:${port}` : ''}`,
         'object-src \'self\'',
-        'connect-src https://*.backlog.com https://api.github.com https://slack.com/',
+        `connect-src https://*.backlog.com https://api.github.com https://slack.com/ ${isDev ? ` ws://localhost:${port}` : ''}`,
       ].join('; '),
     },
   }
