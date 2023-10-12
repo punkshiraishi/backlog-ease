@@ -8,6 +8,10 @@ const props = defineProps({
     type: Object as PropType<BacklogIssue>,
     required: true,
   },
+  defaultGithubPullRequests: {
+    type: Array as PropType<GithubPullRequest[]>,
+    default: () => [],
+  },
   getGithubPullRequests: {
     type: Function as PropType<(keyword: string) => Promise<GithubPullRequest[]>>,
     required: true,
@@ -17,9 +21,9 @@ const props = defineProps({
     default: null,
   },
 })
-const { issue, getGithubPullRequests } = toRefs(props)
+const { issue, getGithubPullRequests, defaultGithubPullRequests } = toRefs(props)
 
-const githubPullRequests = ref<GithubPullRequest[]>([])
+const githubPullRequests = ref<GithubPullRequest[]>(defaultGithubPullRequests.value)
 
 onMounted(async () => {
   try {
