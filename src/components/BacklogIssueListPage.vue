@@ -4,6 +4,7 @@ import { getGithubPullRequests } from '~/api/github'
 import BacklogIssueCard from '~/components/BacklogIssueCard.vue'
 import { getSlackMessages } from '~/api/slack'
 import { cacheStorage } from '~/logic'
+import type { BacklogIssue } from '~/types/backlog'
 
 defineProps({
   popup: {
@@ -56,8 +57,9 @@ function openOptionsPage() {
 const showGithubPullRequestList = ref(true)
 const showGithubPullRequestListToggle = ref(false)
 
-async function _getGithubPullRequests(keyword: string) {
-  const res = await getGithubPullRequests(keyword)
+async function _getGithubPullRequests(issue: BacklogIssue) {
+  const res = await getGithubPullRequests(issue.issueKey)
+  cacheStorage.value.githubPullRequests[issue.id] = res
   showGithubPullRequestListToggle.value = true
   return res
 }
@@ -134,9 +136,8 @@ async function _getGithubPullRequests(keyword: string) {
         />
         <GithubPullRequestListArea
           v-show="showGithubPullRequestList"
-          :issue="issue"
           :default-github-pull-requests="cacheStorage.githubPullRequests[issue.id] || []"
-          :get-github-pull-requests="_getGithubPullRequests"
+          :get-github-pull-requests="() => _getGithubPullRequests(issue)"
           :get-slack-messages="slackEnabled ? getSlackMessages : null"
           ml-6
         />
