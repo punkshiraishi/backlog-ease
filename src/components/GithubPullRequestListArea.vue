@@ -1,19 +1,14 @@
 <script lang="ts" setup>
 import { defineProps } from 'vue'
-import type { BacklogIssue } from '~/types/backlog'
 import type { GithubPullRequest } from '~/types/github'
 import type { SlackMessage } from '~/types/slack'
 const props = defineProps({
-  issue: {
-    type: Object as PropType<BacklogIssue>,
-    required: true,
-  },
   defaultGithubPullRequests: {
     type: Array as PropType<GithubPullRequest[]>,
     default: () => [],
   },
   getGithubPullRequests: {
-    type: Function as PropType<(keyword: string) => Promise<GithubPullRequest[]>>,
+    type: Function as PropType<() => Promise<GithubPullRequest[]>>,
     required: true,
   },
   getSlackMessages: {
@@ -21,13 +16,13 @@ const props = defineProps({
     default: null,
   },
 })
-const { issue, getGithubPullRequests, defaultGithubPullRequests } = toRefs(props)
+const { getGithubPullRequests, defaultGithubPullRequests } = toRefs(props)
 
 const githubPullRequests = ref<GithubPullRequest[]>(defaultGithubPullRequests.value)
 
 onMounted(async () => {
   try {
-    githubPullRequests.value = await getGithubPullRequests.value(issue.value.issueKey)
+    githubPullRequests.value = await getGithubPullRequests.value()
   }
   catch (error) {
     console.error(error)
