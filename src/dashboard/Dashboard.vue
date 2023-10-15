@@ -1,8 +1,11 @@
 <template>
   <main
     w-screen bg-blueGray-100 p-10 h-screen
-    flex flex-column justify-center
+    flex flex-col items-center
   >
-    <BacklogIssueListPage w="700px" />
+    <div flex flex-col items-center relative w-700px>
+      <BacklogIssueListPage w="700px" />
+      <BugButton self-end />
+    </div>
   </main>
 </template>
