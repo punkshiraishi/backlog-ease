@@ -41,6 +41,7 @@ export async function getManifest() {
       {
         matches: [
           'https://github.com/*',
+          'https://*.backlog.com/*',
         ],
         js: [
           'dist/contentScripts/index.global.js',
