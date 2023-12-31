@@ -28,3 +28,8 @@ export interface BacklogIssueUpdateRequest {
   attachmentId?: number[]
   comment?: string
 }
+
+export interface BacklogRedirectMapping {
+  from: string
+  to: string
+}
