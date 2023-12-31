@@ -253,6 +253,22 @@ async function validateSlackConfigs() {
             />
           </template>
         </LabeledItem>
+        <LabeledItem />
+        <LabeledItem>
+          <template #label>
+            Backlog プロジェクトリダイレクト設定<InformationIcon ml-1>
+              Backlog プロジェクトのキーを変更した時にここで新旧のキーを登録することで<br>
+              旧 URL から新 URL にリダイレクトさせることができます。
+            </InformationIcon>
+          </template>
+          <template #content>
+            <BacklogRedirectMappingInput
+              v-model="storage.redirectMappings"
+              :options="storage.backlogIdPrefixes"
+              w-full mt-2
+            />
+          </template>
+        </LabeledItem>
       </div>
     </div>
   </main>

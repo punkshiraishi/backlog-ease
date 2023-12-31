@@ -53,5 +53,31 @@ const observer = new MutationObserver(async () => {
   // 全て完了したら監視を終了する
   observer.disconnect()
 })
-
 observer.observe(document.body, { childList: true, subtree: true })
+
+const url = window.location.href
+
+const redirectService = async () => {
+  // storage.value は取得されるまで初期値が返ってくるので生の browser.storage.local を使う
+  const options = await browser.storage.local.get('options')
+  const redirectMappings = JSON.parse(options.options).redirectMappings
+
+  if (!Array.isArray(redirectMappings))
+    return
+
+  if (!url.match(/^https:\/\/.*\.backlog\.com\/view\/.*$/))
+    return
+
+  const result = await fetch(url)
+
+  if (result.status !== 404)
+    return
+
+  const matchedRedirectMapping = redirectMappings.find(({ from }) => url.includes(from))
+  if (matchedRedirectMapping && matchedRedirectMapping.to && matchedRedirectMapping.from) {
+    const { from, to } = matchedRedirectMapping
+    window.location.href = url.replace(from, to)
+  }
+}
+
+redirectService()

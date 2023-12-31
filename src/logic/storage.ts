@@ -1,5 +1,5 @@
 import { conversionKeys } from './conversion'
-import type { BacklogIssue, BacklogStatus } from '~/types/backlog'
+import type { BacklogIssue, BacklogRedirectMapping, BacklogStatus } from '~/types/backlog'
 import { useStorageLocal } from '~/composables/useStorageLocal'
 import type { GithubPullRequest } from '~/types/github'
 
@@ -15,6 +15,7 @@ export interface OptionStorage {
   prTitle: string
   enableInputPRDescription: boolean
   prDescription: string
+  redirectMappings: BacklogRedirectMapping[]
 }
 
 export const storage = useStorageLocal<OptionStorage>('options', {
@@ -29,7 +30,7 @@ export const storage = useStorageLocal<OptionStorage>('options', {
   prTitle: `${conversionKeys.ISSUE_KEY} ${conversionKeys.ISSUE_NAME}`,
   enableInputPRDescription: true,
   prDescription: `# チケット\n${conversionKeys.ISSUE_URL}`,
-
+  redirectMappings: [],
 })
 
 export interface BacklogStatusesCache { [key: string]: BacklogStatus[] }
