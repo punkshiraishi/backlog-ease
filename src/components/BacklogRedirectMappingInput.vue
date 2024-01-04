@@ -11,10 +11,14 @@ const props = defineProps({
     required: true,
   },
 })
-
-defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue'])
 
 const { modelValue } = toRefs(props)
+
+onMounted(() => {
+  if (!modelValue.value || modelValue.value.length === 0)
+    emit('update:modelValue', [{ from: '', to: '' }])
+})
 </script>
 
 <template>
