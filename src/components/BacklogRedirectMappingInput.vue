@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { BacklogRedirectMapping } from '~/types/backlog'
 
-const props = defineProps({
+defineProps({
   modelValue: {
     type: Array as PropType<BacklogRedirectMapping[]>,
     required: true,
@@ -11,14 +11,8 @@ const props = defineProps({
     required: true,
   },
 })
-const emit = defineEmits(['update:modelValue'])
 
-const { modelValue } = toRefs(props)
-
-onMounted(() => {
-  if (!modelValue.value || modelValue.value.length === 0)
-    emit('update:modelValue', [{ from: '', to: '' }])
-})
+defineEmits(['update:modelValue'])
 </script>
 
 <template>
@@ -59,7 +53,7 @@ onMounted(() => {
     </div>
     <button
       self-center flex flex-row items-center space-x-1
-      @click.prevent="$emit('update:modelValue', [...modelValue, { from: '', to: '' }])"
+      @click.prevent="$emit('update:modelValue', [...(modelValue || []), { from: '', to: '' }])"
     >
       <ic:baseline-add bg-primary text-white rounded-full /><span text-primary>追加</span>
     </button>
