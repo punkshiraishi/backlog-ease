@@ -105,11 +105,7 @@ async function validateSlackConfigs() {
             </InformationIcon>
           </template>
           <template #content>
-            <BaseInput
-              v-model="backlogHost"
-              placeholder="xxx.backlog.jp"
-              class="w-full"
-            />
+            <BaseInput v-model="backlogHost" placeholder="xxx.backlog.jp" class="w-full" />
           </template>
         </LabeledItem>
         <LabeledItem>
@@ -121,20 +117,13 @@ async function validateSlackConfigs() {
             </InformationIcon>
           </template>
           <template #content>
-            <BaseInput
-              v-model="storage.backlogApiKey"
-              type="password"
-              class="w-full"
-            />
+            <BaseInput v-model="storage.backlogApiKey" type="password" class="w-full" />
           </template>
         </LabeledItem>
         <LabeledItem>
           <template #content>
             <div class="flex flex-col items-start space-y-1">
-              <TokenStatusText
-                :status="backlogStatus"
-                token-name="Backlog Host と Backlog API Key"
-              />
+              <TokenStatusText :status="backlogStatus" token-name="Backlog Host と Backlog API Key" />
             </div>
           </template>
         </LabeledItem>
@@ -144,11 +133,7 @@ async function validateSlackConfigs() {
             GitHub Organization
           </template>
           <template #content>
-            <BaseInput
-              v-model="storage.githubOrg"
-              placeholder="Enter GitHub Organization"
-              class="w-full"
-            />
+            <BaseInput v-model="storage.githubOrg" placeholder="Enter GitHub Organization" class="w-full" />
           </template>
         </LabeledItem>
         <LabeledItem>
@@ -160,20 +145,13 @@ async function validateSlackConfigs() {
             </InformationIcon>
           </template>
           <template #content>
-            <BaseInput
-              v-model="storage.githubToken"
-              type="password"
-              class="w-full"
-            />
+            <BaseInput v-model="storage.githubToken" type="password" class="w-full" />
           </template>
         </LabeledItem>
         <LabeledItem>
           <template #content>
             <div class="flex flex-col items-start space-y-1">
-              <TokenStatusText
-                :status="githubStatus"
-                token-name="GitHub Organization と GitHub Token"
-              />
+              <TokenStatusText :status="githubStatus" token-name="GitHub Organization と GitHub Token" />
             </div>
           </template>
         </LabeledItem>
@@ -186,11 +164,7 @@ async function validateSlackConfigs() {
             </InformationIcon>
           </template>
           <template #content>
-            <BaseInput
-              v-model="storage.slackChannel"
-              placeholder="general,random, ..."
-              class="w-full"
-            />
+            <BaseInput v-model="storage.slackChannel" placeholder="general,random, ..." class="w-full" />
           </template>
         </LabeledItem>
         <LabeledItem>
@@ -204,20 +178,13 @@ async function validateSlackConfigs() {
             </InformationIcon>
           </template>
           <template #content>
-            <BaseInput
-              v-model="storage.slackToken"
-              type="password"
-              class="w-full"
-            />
+            <BaseInput v-model="storage.slackToken" type="password" class="w-full" />
           </template>
         </LabeledItem>
         <LabeledItem>
           <template #content>
             <div class="flex flex-col items-start space-y-1">
-              <TokenStatusText
-                :status="slackStatus"
-                token-name="Slack Channel と Slack Token"
-              />
+              <TokenStatusText :status="slackStatus" token-name="Slack Channel と Slack Token" />
             </div>
           </template>
         </LabeledItem>
@@ -231,8 +198,7 @@ async function validateSlackConfigs() {
           </template>
           <template #content>
             <BaseInput
-              v-model="storage.prTitle"
-              :disabled="!storage.enableInputPRTitle"
+              v-model="storage.prTitle" :disabled="!storage.enableInputPRTitle"
               class="border border-gray-400 rounded px-2 py-1 w-full"
             />
           </template>
@@ -246,9 +212,7 @@ async function validateSlackConfigs() {
           </template>
           <template #content>
             <BaseTextarea
-              v-model="storage.prDescription"
-              :disabled="!storage.enableInputPRDescription"
-              rows="5"
+              v-model="storage.prDescription" :disabled="!storage.enableInputPRDescription" rows="5"
               class="border border-gray-400 rounded px-2 py-1 w-full"
             />
           </template>
@@ -263,11 +227,23 @@ async function validateSlackConfigs() {
           </template>
           <template #content>
             <BacklogRedirectMappingInput
-              v-model="storage.redirectMappings"
-              :options="storage.backlogIdPrefixes"
-              w-full mt-2
+              v-model="storage.redirectMappings" :options="storage.backlogIdPrefixes" w-full
+              mt-2
             />
           </template>
+        </LabeledItem>
+        <LabeledItem>
+          <template #label>
+            <div class="flex flex-row justify-between items-center space-x-3">
+              <div>
+                ガントチャートに関連する PR リンクを表示<InformationIcon ml-1>
+                  Backlog のガントチャート画面で課題タイトルの横に関連する GitHub PR を表示するボタンを追加します
+                </InformationIcon>
+              </div>
+              <BaseToggle v-model="storage.enableGanttPRButton" />
+            </div>
+          </template>
+          <template #content />
         </LabeledItem>
       </div>
     </div>

@@ -16,6 +16,7 @@ export interface OptionStorage {
   enableInputPRDescription: boolean
   prDescription: string
   redirectMappings: BacklogRedirectMapping[]
+  enableGanttPRButton: boolean
 }
 
 export const storage = useStorageLocal<OptionStorage>('options', {
@@ -31,6 +32,7 @@ export const storage = useStorageLocal<OptionStorage>('options', {
   enableInputPRDescription: true,
   prDescription: `# チケット\n${conversionKeys.ISSUE_URL}`,
   redirectMappings: [],
+  enableGanttPRButton: false,
 })
 
 export interface BacklogStatusesCache { [key: string]: BacklogStatus[] }

@@ -84,8 +84,14 @@ const redirectService = async () => {
 redirectService()
 
 // ガントチャートページでのリンク表示機能
-const displayLinkUrls = () => {
+const displayLinkUrls = async () => {
   if (!url.match(/^https:\/\/.*\.backlog\.com\/gantt\/.*$/))
+    return
+
+  // 機能が無効化されている場合は早期リターン
+  const options = await browser.storage.local.get('options')
+  const enableGanttPRButton = JSON.parse(options.options).enableGanttPRButton
+  if (!enableGanttPRButton)
     return
 
   const ganttObserver = new MutationObserver(async (mutations) => {
