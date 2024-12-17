@@ -174,7 +174,7 @@ const displayLinkUrls = () => {
                   prList.style.flexWrap = 'nowrap'
                   prList.style.gap = '4px'
                   prList.style.overflowX = 'auto'
-                  prList.style.maxWidth = '300px'
+                  prList.style.maxWidth = '600px'
                   prList.style.paddingRight = '150px'
                   // スクロールバーを非表示にする
                   prList.style.msOverflowStyle = 'none' // IE, Edge用
