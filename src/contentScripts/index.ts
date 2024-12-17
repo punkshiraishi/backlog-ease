@@ -213,7 +213,7 @@ const displayLinkUrls = () => {
                     prButton.appendChild(statusIcon)
 
                     const prNumber = document.createElement('span')
-                    prNumber.textContent = `#${pr.number}`
+                    prNumber.textContent = `${pr.repository_url.match(/repos\/[^/]+\/([^/]+)$/)?.[1] ?? ''}#${pr.number}`
                     prNumber.style.color = '#0052cc'
                     prButton.appendChild(prNumber)
 
