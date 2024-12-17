@@ -88,8 +88,6 @@ const displayLinkUrls = () => {
   if (!url.match(/^https:\/\/.*\.backlog\.com\/gantt\/.*$/))
     return
 
-  const processedLinks = new Set<string>()
-
   const ganttObserver = new MutationObserver(async (mutations) => {
     for (const mutation of mutations) {
       const nodes = Array.from(mutation.addedNodes)
@@ -106,13 +104,13 @@ const displayLinkUrls = () => {
           if (!(link instanceof HTMLAnchorElement))
             continue
 
-          const href = link.href
-          // 既に処理済みのリンクはスキップ
-          if (processedLinks.has(href))
+          // data属性で処理済みかチェック
+          if (link.dataset.prProcessed === 'true')
             continue
 
-          processedLinks.add(href)
+          link.dataset.prProcessed = 'true'
 
+          const href = link.href
           const ticketMatch = href.match(/.*\/(.*-\d+)$/)
           if (!ticketMatch)
             continue
