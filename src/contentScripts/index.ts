@@ -208,6 +208,7 @@ const displayLinkUrls = () => {
                     statusIcon.style.color = getPrStatusColor(
                       pr.state,
                       pr.pull_request?.merged_at !== null,
+                      pr.draft,
                     )
                     prButton.appendChild(statusIcon)
 
