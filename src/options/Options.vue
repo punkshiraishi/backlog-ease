@@ -236,8 +236,8 @@ async function validateSlackConfigs() {
           <template #label>
             <div class="flex flex-row justify-between items-center space-x-3">
               <div>
-                ガントチャートに関連する PR リンクを表示<InformationIcon ml-1>
-                  Backlog のガントチャート画面で課題タイトルの横に関連する GitHub PR を表示するボタンを追加します
+                課題に関連する PR のリンクを表示<InformationIcon ml-1>
+                  Backlog の課題一覧画面とガントチャート画面で課題タイトルの横に関連する GitHub PR を表示するボタンを追加します
                 </InformationIcon>
               </div>
               <BaseToggle v-model="storage.enableGanttPRButton" />
