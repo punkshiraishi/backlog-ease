@@ -39,17 +39,24 @@ export function initGanttPrLinks() {
     prContainer.appendChild(prList)
 
     for (const pr of prs) {
-      const prButtonEl = document.createElement('button')
-      prButtonEl.style.display = 'flex'
-      prButtonEl.style.alignItems = 'center'
-      prButtonEl.style.gap = '3px'
-      prButtonEl.style.height = '16px'
-      prButtonEl.style.border = '1px solid #ddd'
-      prButtonEl.style.borderRadius = '4px'
-      prButtonEl.style.backgroundColor = '#fff'
-      prButtonEl.style.cursor = 'pointer'
-      prButtonEl.style.fontSize = '9px'
-      prButtonEl.onclick = () => window.open(pr.html_url, '_blank')
+      const prLinkEl = document.createElement('a')
+      prLinkEl.href = pr.html_url
+      prLinkEl.target = '_blank'
+      prLinkEl.rel = 'noopener noreferrer'
+      prLinkEl.style.display = 'flex'
+      prLinkEl.style.alignItems = 'center'
+      prLinkEl.style.gap = '3px'
+      prLinkEl.style.height = '16px'
+      prLinkEl.style.border = '1px solid #ddd'
+      prLinkEl.style.borderRadius = '4px'
+      prLinkEl.style.backgroundColor = '#fff'
+      prLinkEl.style.cursor = 'pointer'
+      prLinkEl.style.fontSize = '9px'
+      prLinkEl.style.textDecoration = 'none'
+      // prevent gantt row click propagation
+      prLinkEl.addEventListener('click', (ev) => {
+        ev.stopPropagation()
+      })
 
       // ステータスアイコン
       const statusIcon = document.createElement('span')
@@ -65,12 +72,12 @@ export function initGanttPrLinks() {
         pr.pull_request?.merged_at !== null,
         pr.draft,
       )
-      prButtonEl.appendChild(statusIcon)
+      prLinkEl.appendChild(statusIcon)
 
       const prNumber = document.createElement('span')
       prNumber.textContent = `${pr.repository_url.match(/repos\/[^/]+\/([^/]+)$/)?.[1] ?? ''}#${pr.number}`
       prNumber.style.color = '#0052cc'
-      prButtonEl.appendChild(prNumber)
+      prLinkEl.appendChild(prNumber)
 
       // ラベル
       if (pr.labels && pr.labels.length > 0) {
@@ -83,11 +90,11 @@ export function initGanttPrLinks() {
           tagSpan.style.color = '#fff'
           tagSpan.style.fontSize = '7px'
           tagSpan.style.lineHeight = '12px'
-          prButtonEl.appendChild(tagSpan)
+          prLinkEl.appendChild(tagSpan)
         }
       }
 
-      prList.appendChild(prButtonEl)
+      prList.appendChild(prLinkEl)
     }
   }
 
