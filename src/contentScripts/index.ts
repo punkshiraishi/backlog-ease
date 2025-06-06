@@ -83,6 +83,92 @@ const redirectService = async () => {
 
 redirectService()
 
+// -------------------------------------------------------------
+// PR 情報をキャッシュし、ガントチャートの再描画時にも復元する仕組み
+// -------------------------------------------------------------
+
+// チケット ID をキーに、取得済み PR と展開状態を保持
+const prCache = new Map<string, { prs: any[]; expanded: boolean }>()
+
+// PR 情報を描画する共通関数
+function renderPrContainer(prContainer: HTMLElement, prs: any[]) {
+  prContainer.innerHTML = ''
+
+  if (prs.length === 0) {
+    const noPrText = document.createElement('div')
+    noPrText.textContent = 'No related PRs found'
+    noPrText.style.color = '#666'
+    noPrText.style.fontSize = '11px'
+    prContainer.appendChild(noPrText)
+    return
+  }
+
+  const prList = document.createElement('div')
+  prList.style.display = 'flex'
+  prList.style.flexWrap = 'nowrap'
+  prList.style.gap = '4px'
+  prList.style.overflowX = 'auto'
+  prList.style.maxWidth = '600px'
+  prList.style.paddingRight = '150px'
+  // スクロールバーを非表示
+  ;(prList.style as any).msOverflowStyle = 'none' // IE, Edge
+  prList.style.scrollbarWidth = 'none' // Firefox
+  prList.style.cssText += '&::-webkit-scrollbar { display: none; }' // WebKit
+  prContainer.appendChild(prList)
+
+  for (const pr of prs) {
+    const prButtonEl = document.createElement('button')
+    prButtonEl.style.display = 'flex'
+    prButtonEl.style.alignItems = 'center'
+    prButtonEl.style.gap = '3px'
+    prButtonEl.style.height = '16px'
+    prButtonEl.style.border = '1px solid #ddd'
+    prButtonEl.style.borderRadius = '4px'
+    prButtonEl.style.backgroundColor = '#fff'
+    prButtonEl.style.cursor = 'pointer'
+    prButtonEl.style.fontSize = '9px'
+    prButtonEl.onclick = () => window.open(pr.html_url, '_blank')
+
+    // ステータスアイコン
+    const statusIcon = document.createElement('span')
+    statusIcon.style.display = 'inline-flex'
+    statusIcon.style.alignItems = 'center'
+    statusIcon.innerHTML = getPrStatusIcon(
+      pr.state,
+      pr.pull_request?.merged_at !== null,
+      pr.draft,
+    )
+    statusIcon.style.color = getPrStatusColor(
+      pr.state,
+      pr.pull_request?.merged_at !== null,
+      pr.draft,
+    )
+    prButtonEl.appendChild(statusIcon)
+
+    const prNumber = document.createElement('span')
+    prNumber.textContent = `${pr.repository_url.match(/repos\/[^/]+\/([^/]+)$/)?.[1] ?? ''}#${pr.number}`
+    prNumber.style.color = '#0052cc'
+    prButtonEl.appendChild(prNumber)
+
+    // ラベル
+    if (pr.labels && pr.labels.length > 0) {
+      for (const label of pr.labels) {
+        const tagSpan = document.createElement('span')
+        tagSpan.textContent = label.name
+        tagSpan.style.padding = '0px 3px'
+        tagSpan.style.borderRadius = '9999px'
+        tagSpan.style.backgroundColor = `#${label.color}`
+        tagSpan.style.color = '#fff'
+        tagSpan.style.fontSize = '7px'
+        tagSpan.style.lineHeight = '12px'
+        prButtonEl.appendChild(tagSpan)
+      }
+    }
+
+    prList.appendChild(prButtonEl)
+  }
+}
+
 // ガントチャートページでのリンク表示機能
 const displayLinkUrls = async () => {
   if (!url.match(/^https:\/\/.*\.backlog\.com\/gantt\/.*$/))
@@ -106,7 +192,7 @@ const displayLinkUrls = async () => {
         if (links.length === 0)
           continue
 
-        for (const link of links) {
+        for (const link of Array.from(links)) {
           if (!(link instanceof HTMLAnchorElement))
             continue
 
@@ -165,6 +251,16 @@ const displayLinkUrls = async () => {
 
           // ボタンクリックイベントの設定
           let prsLoaded = false
+
+          // キャッシュが存在する場合は即描画
+          const cached = prCache.get(ticketId)
+          if (cached) {
+            renderPrContainer(prContainer, cached.prs)
+            prContainer.style.display = cached.expanded ? 'block' : 'none'
+            prButton.innerHTML = cached.expanded ? 'Hide<br>PRs' : 'Show<br>PRs'
+            prsLoaded = true
+          }
+
           prButton.addEventListener('click', async () => {
             if (!prsLoaded) {
               prButton.innerHTML = '...'
@@ -172,86 +268,15 @@ const displayLinkUrls = async () => {
 
               try {
                 const prs = await getGithubPullRequests(ticketId)
-                prContainer.innerHTML = '' // Clear existing content
 
-                if (prs && prs.length > 0) {
-                  const prList = document.createElement('div')
-                  prList.style.display = 'flex'
-                  prList.style.flexWrap = 'nowrap'
-                  prList.style.gap = '4px'
-                  prList.style.overflowX = 'auto'
-                  prList.style.maxWidth = '600px'
-                  prList.style.paddingRight = '150px'
-                  // スクロールバーを非表示にする
-                  prList.style.msOverflowStyle = 'none' // IE, Edge用
-                  prList.style.scrollbarWidth = 'none' // Firefox用
-                  // Webkit (Chrome, Safari)用
-                  prList.style.cssText += '&::-webkit-scrollbar { display: none; }'
-                  prContainer.appendChild(prList)
-
-                  for (const pr of prs) {
-                    const prButton = document.createElement('button')
-                    prButton.style.display = 'flex'
-                    prButton.style.alignItems = 'center'
-                    prButton.style.gap = '3px'
-                    prButton.style.height = '16px'
-                    prButton.style.border = '1px solid #ddd'
-                    prButton.style.borderRadius = '4px'
-                    prButton.style.backgroundColor = '#fff'
-                    prButton.style.cursor = 'pointer'
-                    prButton.style.fontSize = '9px'
-                    prButton.onclick = () => window.open(pr.html_url, '_blank')
-
-                    // PR ステータスアイコンの追加
-                    const statusIcon = document.createElement('span')
-                    statusIcon.style.display = 'inline-flex'
-                    statusIcon.style.alignItems = 'center'
-                    statusIcon.innerHTML = getPrStatusIcon(
-                      pr.state,
-                      pr.pull_request?.merged_at !== null,
-                      pr.draft,
-                    )
-                    statusIcon.style.color = getPrStatusColor(
-                      pr.state,
-                      pr.pull_request?.merged_at !== null,
-                      pr.draft,
-                    )
-                    prButton.appendChild(statusIcon)
-
-                    const prNumber = document.createElement('span')
-                    prNumber.textContent = `${pr.repository_url.match(/repos\/[^/]+\/([^/]+)$/)?.[1] ?? ''}#${pr.number}`
-                    prNumber.style.color = '#0052cc'
-                    prButton.appendChild(prNumber)
-
-                    // タグ（ラベル）の表示
-                    if (pr.labels && pr.labels.length > 0) {
-                      for (const label of pr.labels) {
-                        const tagSpan = document.createElement('span')
-                        tagSpan.textContent = label.name
-                        tagSpan.style.padding = '0px 3px'
-                        tagSpan.style.borderRadius = '9999px'
-                        tagSpan.style.backgroundColor = `#${label.color}`
-                        tagSpan.style.color = '#fff'
-                        tagSpan.style.fontSize = '7px'
-                        tagSpan.style.lineHeight = '12px'
-                        prButton.appendChild(tagSpan)
-                      }
-                    }
-
-                    prList.appendChild(prButton)
-                  }
-                }
-                else {
-                  const noPrText = document.createElement('div')
-                  noPrText.textContent = 'No related PRs found'
-                  noPrText.style.color = '#666'
-                  noPrText.style.fontSize = '11px'
-                  prContainer.appendChild(noPrText)
-                }
+                renderPrContainer(prContainer, prs)
 
                 prsLoaded = true
                 prButton.innerHTML = 'Hide<br>PRs'
                 prContainer.style.display = 'block'
+
+                // キャッシュへ保存
+                prCache.set(ticketId, { prs, expanded: true })
               }
               catch (error) {
                 console.error('Failed to fetch GitHub PRs:', error)
@@ -268,6 +293,11 @@ const displayLinkUrls = async () => {
               const isVisible = prContainer.style.display === 'block'
               prContainer.style.display = isVisible ? 'none' : 'block'
               prButton.innerHTML = isVisible ? 'Show<br>PRs' : 'Hide<br>PRs'
+
+              // 展開状態をキャッシュに反映
+              const cachedData = prCache.get(ticketId)
+              if (cachedData)
+                prCache.set(ticketId, { ...cachedData, expanded: !isVisible })
             }
             prButton.disabled = false
           })
