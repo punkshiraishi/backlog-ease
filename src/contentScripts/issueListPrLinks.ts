@@ -6,12 +6,6 @@ import { getGithubPullRequests } from '~/api/github'
  * 行の一番左にボタン+PR一覧を描画する。
  */
 export function initIssueListPrLinks() {
-  // 対象 URL 判定
-  const url = window.location.href
-  if (!url.match(/^https:\/\/.*\.backlog\.com\/find\/.*$/))
-    return
-
-  // チケット ID をキーに取得済み PR と展開状態をキャッシュ
   const prCache = new Map<string, { prs: any[]; expanded: boolean }>()
 
   /** 共通描画関数 (ganttPrLinks と同仕様) */
@@ -100,16 +94,28 @@ export function initIssueListPrLinks() {
     }
   }
 
-  /** テーブル処理: ヘッダ・各行に PR 列を挿入 */
-  async function processIssueTable() {
-    // オプション無効時は処理しない (gantt のフラグを暫定流用)
-    const storage = await browser.storage.local.get('options')
-    const enable = JSON.parse(storage.options).enableGanttPRButton
-    if (!enable)
+  async function mainLogic() {
+    const url = window.location.href
+    const isOnIssueListPage = url.match(/^https:\/\/.*\.backlog\.com\/find\/.*$/)
+
+    if (!isOnIssueListPage) {
+      document.querySelectorAll('[data-pr-column]').forEach(el => el.remove())
+      document.querySelectorAll('.cell-pr-links').forEach(el => el.remove())
+      prCache.clear()
       return
+    }
 
     const table = document.querySelector<HTMLTableElement>('#issues-table')
     if (!table)
+      return
+
+    // オプションチェック
+    const storage = await browser.storage.local.get('options')
+    if (!storage.options)
+      return
+
+    const enable = JSON.parse(storage.options).enableGanttPRButton
+    if (!enable)
       return
 
     // ヘッダ列の追加 (一度だけ)
@@ -123,15 +129,13 @@ export function initIssueListPrLinks() {
       theadRow.insertBefore(th, theadRow.firstChild)
     }
 
-    // add capture listener once per table
+    // 行クリック抑止リスナーの追加（一度だけ）
     if (!table.dataset.prCaptureAdded) {
       table.dataset.prCaptureAdded = 'true'
-      // capture-phase listener to suppress row navigation when clicking in PR column
       const stopIfInsidePrCell = (evt: Event) => {
         const target = evt.target as HTMLElement | null
         if (target?.closest('.cell-pr-links')) {
           evt.stopPropagation()
-          // prevent default navigation just in case
           evt.preventDefault()
         }
       }
@@ -142,40 +146,32 @@ export function initIssueListPrLinks() {
     // データ行の処理
     const rows = table.querySelectorAll<HTMLTableRowElement>('tbody tr')
     rows.forEach((row) => {
-      if (row.dataset.prProcessed === 'true')
-        return
-      row.dataset.prProcessed = 'true'
+      if (row.querySelector('.cell-pr-links'))
+        return // 既に処理済み
 
-      // チケットキー取得 (.cell-key a のテキスト)
       const keyAnchor = row.querySelector<HTMLAnchorElement>('.cell-key a')
       const ticketId = keyAnchor?.textContent?.trim() || ''
       if (!ticketId)
         return
 
-      // 左端にセルを追加
       const td = document.createElement('td')
       td.className = 'cell-pr-links'
       td.style.verticalAlign = 'top'
-      row.insertBefore(td, row.firstChild)
-
-      // Set width for data cell to align with header
       td.style.width = '100px'
       td.style.minWidth = '100px'
       td.style.maxWidth = '100px'
       td.style.overflowX = 'auto'
       td.style.whiteSpace = 'nowrap'
+      row.insertBefore(td, row.firstChild)
 
-      // コンテンツのコンテナ
       const container = document.createElement('div')
       container.style.display = 'flex'
       container.style.flexDirection = 'column'
       container.style.alignItems = 'flex-start'
       container.style.width = '100%'
       container.style.maxWidth = '100%'
-      // PR リストだけをスクロールさせるため、コンテナ自体はスクロールしない
       td.appendChild(container)
 
-      // ボタン
       const prButton = document.createElement('button')
       prButton.textContent = 'Show PRs'
       prButton.style.fontSize = '8px'
@@ -186,7 +182,6 @@ export function initIssueListPrLinks() {
       prButton.style.alignSelf = 'center'
       container.appendChild(prButton)
 
-      // PR 情報表示用コンテナ
       const prContainer = document.createElement('div')
       prContainer.style.marginTop = '4px'
       prContainer.style.fontSize = '12px'
@@ -195,7 +190,6 @@ export function initIssueListPrLinks() {
       prContainer.style.overflowX = 'auto'
       container.appendChild(prContainer)
 
-      // キャッシュチェック
       let prsLoaded = false
       const cached = prCache.get(ticketId)
       if (cached) {
@@ -205,7 +199,6 @@ export function initIssueListPrLinks() {
         prsLoaded = true
       }
 
-      // ボタンクリックイベント
       prButton.addEventListener('click', async (e) => {
         e.stopPropagation()
         e.preventDefault()
@@ -231,7 +224,6 @@ export function initIssueListPrLinks() {
           }
         }
         else {
-          // Toggle
           const isVisible = prContainer.style.display === 'block'
           prContainer.style.display = isVisible ? 'none' : 'block'
           prButton.textContent = isVisible ? 'Show PRs' : 'Hide PRs'
@@ -244,12 +236,6 @@ export function initIssueListPrLinks() {
     })
   }
 
-  // MutationObserver でテーブルの再描画を検知
-  const observer = new MutationObserver(() => {
-    processIssueTable()
-  })
+  const observer = new MutationObserver(() => mainLogic())
   observer.observe(document.body, { childList: true, subtree: true })
-
-  // 初回実行
-  processIssueTable()
 }
